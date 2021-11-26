@@ -27,8 +27,6 @@
 
 #define ENCODER_VERSION "0025"
 
-#include "bt_target.h"
-
 /*DEFINES*/
 #ifndef FALSE
 #define FALSE 0
