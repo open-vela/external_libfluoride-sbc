@@ -27,8 +27,7 @@
  ******************************************************************************/
 
 PRIVATE OI_STATUS OI_CODEC_SBC_Alloc(OI_CODEC_SBC_COMMON_CONTEXT* common,
-                                     uint32_t* codecDataAligned,
-                                     uint32_t codecDataBytes,
+                                     uint32_t* codecDataAligned, uint32_t codecDataBytes,
                                      uint8_t maxChannels, uint8_t pcmStride) {
   int i;
   size_t filterBufferCount;
@@ -48,15 +47,13 @@ PRIVATE OI_STATUS OI_CODEC_SBC_Alloc(OI_CODEC_SBC_COMMON_CONTEXT* common,
 
   /* Compute sizes needed for the memory regions, and bail if we don't have
    * enough memory for them. */
-  subdataSize =
-      maxChannels * sizeof(common->subdata[0]) * SBC_MAX_BANDS * SBC_MAX_BLOCKS;
+  subdataSize = maxChannels * sizeof(common->subdata[0]) * SBC_MAX_BANDS * SBC_MAX_BLOCKS;
   if (subdataSize > codecDataBytes) {
     return OI_STATUS_OUT_OF_MEMORY;
   }
 
-  filterBufferCount =
-      (codecDataBytes - subdataSize) /
-      (sizeof(common->filterBuffer[0][0]) * SBC_MAX_BANDS * maxChannels);
+  filterBufferCount = (codecDataBytes - subdataSize) /
+                      (sizeof(common->filterBuffer[0][0]) * SBC_MAX_BANDS * maxChannels);
   if (filterBufferCount < SBC_CODEC_MIN_FILTER_BUFFERS) {
     return OI_STATUS_OUT_OF_MEMORY;
   }
@@ -70,8 +67,7 @@ PRIVATE OI_STATUS OI_CODEC_SBC_Alloc(OI_CODEC_SBC_COMMON_CONTEXT* common,
 
   /* Allocate memory for the synthesis buffers */
   for (i = 0; i < maxChannels; ++i) {
-    size_t allocSize =
-        common->filterBufferLen * sizeof(common->filterBuffer[0][0]);
+    size_t allocSize = common->filterBufferLen * sizeof(common->filterBuffer[0][0]);
     common->filterBuffer[i] = (SBC_BUFFER_T*)codecData;
     OI_ASSERT(codecDataBytes >= allocSize);
     codecData += allocSize;

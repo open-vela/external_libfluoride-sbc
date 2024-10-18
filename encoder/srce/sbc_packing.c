@@ -26,19 +26,18 @@
 #include "sbc_encoder.h"
 
 #if (SBC_ARM_ASM_OPT == TRUE)
-#define Mult32(s32In1, s32In2, s32OutLow)    \
-  {                                          \
+#define Mult32(s32In1, s32In2, s32OutLow) \
+  {                                       \
     __asm {                                  \
-        MUL s32OutLow,s32In1,s32In2; } \
+        MUL s32OutLow,s32In1,s32In2; }  \
   }
-#define Mult64(s32In1, s32In2, s32OutLow, s32OutHi)     \
-  {                                                     \
+#define Mult64(s32In1, s32In2, s32OutLow, s32OutHi) \
+  {                                                 \
     __asm {                                             \
-        SMULL s32OutLow,s32OutHi,s32In1,s32In2 } \
+        SMULL s32OutLow,s32OutHi,s32In1,s32In2 }  \
   }
 #else
-#define Mult32(s32In1, s32In2, s32OutLow) \
-  s32OutLow = (int32_t)(s32In1) * (int32_t)(s32In2);
+#define Mult32(s32In1, s32In2, s32OutLow) s32OutLow = (int32_t)(s32In1) * (int32_t)(s32In2);
 #define Mult64(s32In1, s32In2, s32OutLow, s32OutHi)                \
   {                                                                \
     __builtin_mul_overflow(s32In1, (uint16_t)s32In2, &s64OutTemp); \
@@ -56,12 +55,11 @@ uint32_t EncPacking(SBC_ENC_PARAMS* pstrEncParams, uint8_t* output) {
   int32_t s32Sb;         /* counter for sub-band*/
   int32_t s32PresentBit; /* represents bit to be stored*/
   /*int32_t s32LoopCountI;                       loop counter*/
-  int32_t s32LoopCountJ; /* loop counter*/
-  uint32_t u32QuantizedSbValue,
-      u32QuantizedSbValue0; /* temp variable to store quantized sb val*/
-  int32_t s32LoopCount;     /* loop counter*/
-  uint8_t u8XoredVal;       /* to store XORed value in CRC calculation*/
-  uint8_t u8CRC;            /* to store CRC value*/
+  int32_t s32LoopCountJ;                              /* loop counter*/
+  uint32_t u32QuantizedSbValue, u32QuantizedSbValue0; /* temp variable to store quantized sb val*/
+  int32_t s32LoopCount;                               /* loop counter*/
+  uint8_t u8XoredVal;                                 /* to store XORed value in CRC calculation*/
+  uint8_t u8CRC;                                      /* to store CRC value*/
   int16_t* ps16GenPtr;
   int32_t s32NumOfBlocks;
   int32_t s32NumOfSubBands = pstrEncParams->s16NumOfSubBands;
@@ -79,12 +77,20 @@ uint32_t EncPacking(SBC_ENC_PARAMS* pstrEncParams, uint8_t* output) {
 #endif
 #endif
 
-  pu8PacketPtr = output;           /*Initialize the ptr*/
-  *pu8PacketPtr++ = (uint8_t)0x9C; /*Sync word*/
-  *pu8PacketPtr++ = (uint8_t)(pstrEncParams->FrameHeader);
+  pu8PacketPtr = output; /*Initialize the ptr*/
+  if (pstrEncParams->Format == SBC_FORMAT_MSBC) {
+    *pu8PacketPtr++ = (uint8_t)0xAD; /*Sync word*/
+  } else {
+    *pu8PacketPtr++ = (uint8_t)0x9C; /*Sync word*/
+  }
 
-  *pu8PacketPtr = (uint8_t)(pstrEncParams->s16BitPool & 0x00FF);
-  pu8PacketPtr += 2; /*skip for CRC*/
+  if (pstrEncParams->Format == SBC_FORMAT_MSBC) {
+    pu8PacketPtr += 3; /* Skip reserved bytes and CRC */
+  } else {
+    *pu8PacketPtr++ = (uint8_t)(pstrEncParams->FrameHeader);
+    *pu8PacketPtr = (uint8_t)(pstrEncParams->s16BitPool & 0x00FF);
+    pu8PacketPtr += 2; /* Skip for CRC */
+  }
 
   /*here it indicate if it is byte boundary or nibble boundary*/
   s32PresentBit = 8;
@@ -232,8 +238,7 @@ uint32_t EncPacking(SBC_ENC_PARAMS* pstrEncParams, uint8_t* output) {
   }
 
   if (pstrEncParams->s16ChannelMode == SBC_JOINT_STEREO) {
-    for (s32LoopCountJ = 7; s32LoopCountJ >= (8 - s32NumOfSubBands);
-         s32LoopCountJ--) {
+    for (s32LoopCountJ = 7; s32LoopCountJ >= (8 - s32NumOfSubBands); s32LoopCountJ--) {
       u8XoredVal = ((u8CRC >> 7) & 0x01) ^ ((Temp >> s32LoopCountJ) & 0x01);
       u8CRC <<= 1;
       u8CRC ^= (u8XoredVal * 0x1D);

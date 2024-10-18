@@ -48,7 +48,7 @@
 /** Scales x by y bits to the right, adding a rounding factor.
  */
 #ifndef SCALE
-#define SCALE(x, y) (((x) + (1 << ((y)-1))) >> (y))
+#define SCALE(x, y) (((x) + (1 << ((y) - 1))) >> (y))
 #endif
 
 /**
@@ -81,8 +81,7 @@ INLINE int32_t default_mul_32s_32s_hi(int32_t u, int32_t v) {
 
 #ifdef DEBUG_DCT
 PRIVATE void float_dct2_8(float* RESTRICT out, int32_t const* RESTRICT in) {
-#define FIX(x, bits) \
-  (((int)floor(0.5f + ((x) * ((float)(1 << bits))))) / ((float)(1 << bits)))
+#define FIX(x, bits) (((int)floor(0.5f + ((x) * ((float)(1 << bits))))) / ((float)(1 << bits)))
 #define FLOAT_BUTTERFLY(x, y) \
   x += y;                     \
   y = x - (y * 2);            \

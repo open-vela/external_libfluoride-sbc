@@ -68,17 +68,16 @@ Declarations of codec functions, data types, and macros.
 #define SBC_WBS_SAMPLES_PER_FRAME 128
 
 #define SBC_HEADER_LEN 4
-#define SBC_MAX_FRAME_LEN                    \
-  (SBC_HEADER_LEN +                          \
-   ((SBC_MAX_BANDS * SBC_MAX_CHANNELS / 2) + \
-    (SBC_MAX_BANDS + SBC_MAX_BLOCKS * SBC_MAX_BITPOOL + 7) / 8))
+#define SBC_MAX_FRAME_LEN                                     \
+  (SBC_HEADER_LEN + ((SBC_MAX_BANDS * SBC_MAX_CHANNELS / 2) + \
+                     (SBC_MAX_BANDS + SBC_MAX_BLOCKS * SBC_MAX_BITPOOL + 7) / 8))
 #define SBC_MAX_SAMPLES_PER_FRAME (SBC_MAX_BANDS * SBC_MAX_BLOCKS)
 
-#define SBC_MAX_SCALEFACTOR_BYTES \
-  ((4 * (SBC_MAX_CHANNELS * SBC_MAX_BANDS) + 7) / 8)
+#define SBC_MAX_SCALEFACTOR_BYTES ((4 * (SBC_MAX_CHANNELS * SBC_MAX_BANDS) + 7) / 8)
 
 #define OI_SBC_SYNCWORD 0x9c
 #define OI_SBC_ENHANCED_SYNCWORD 0x9d
+#define OI_SBC_MSBC_SYNCWORD 0xad
 
 /**@name Sampling frequencies */
 /**@{*/
@@ -136,6 +135,9 @@ Declarations of codec functions, data types, and macros.
 /**< A block size of 16 blocks was used to encode the stream. One possible value
  * for the @a blocks parameter of OI_CODEC_SBC_EncoderConfigure() */
 #define SBC_BLOCKS_16 3
+/**< A block size of 15 blocks was used to encode the stream. One possible value
+ * for the @a blocks parameter of OI_CODEC_SBC_EncoderConfigure() */
+#define SBC_BLOCKS_15 4
 /**@}*/
 
 /**@name Bit allocation methods */
@@ -170,7 +172,7 @@ typedef struct {
                             Input parameter. */
   uint8_t subbands;
 
-  uint8_t mode; /**< The mode of the encoded channel. Input parameter. */
+  uint8_t mode;          /**< The mode of the encoded channel. Input parameter. */
   uint8_t nrof_channels; /**< The number of channels of the encoded stream. */
 
   uint8_t alloc;   /**< The bit allocation method. Input parameter. */
@@ -225,7 +227,7 @@ typedef struct {
  *                                       SBC_DECODER_FAST_SYNTHESIS_BUFFERS)];
  * */
 #define CODEC_DATA_WORDS(numChannels, numBuffers)                              \
-  (((sizeof(int32_t) * SBC_MAX_BLOCKS * (numChannels)*SBC_MAX_BANDS) +         \
+  (((sizeof(int32_t) * SBC_MAX_BLOCKS * (numChannels) * SBC_MAX_BANDS) +       \
     (sizeof(SBC_BUFFER_T) * SBC_MAX_CHANNELS * SBC_MAX_BANDS * (numBuffers)) + \
     (sizeof(uint32_t) - 1)) /                                                  \
    sizeof(uint32_t))
@@ -238,6 +240,7 @@ typedef struct {
   uint8_t restrictSubbands;
   uint8_t enhancedEnabled;
   uint8_t bufferedBlocks;
+  uint8_t mSbcEnabled;
 } OI_CODEC_SBC_DECODER_CONTEXT;
 
 typedef struct {
@@ -269,11 +272,9 @@ typedef struct {
  *                  by an enhanced encoder, or there is a small possibility
  *                  for decoding glitches if synchronization were to be lost.
  */
-OI_STATUS OI_CODEC_SBC_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                    uint32_t* decoderData,
-                                    uint32_t decoderDataBytes,
-                                    uint8_t maxChannels, uint8_t pcmStride,
-                                    OI_BOOL enhanced);
+OI_STATUS OI_CODEC_SBC_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context, uint32_t* decoderData,
+                                    uint32_t decoderDataBytes, uint8_t maxChannels,
+                                    uint8_t pcmStride, OI_BOOL enhanced);
 
 /**
  * This function restricts the kind of SBC frames that the Decoder will
@@ -294,8 +295,10 @@ OI_STATUS OI_CODEC_SBC_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context,
  *                  the requested number of subbands.
  *
  */
-OI_STATUS OI_CODEC_SBC_DecoderLimit(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                    OI_BOOL enhanced, uint8_t subbands);
+OI_STATUS OI_CODEC_SBC_DecoderLimit(OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BOOL enhanced,
+                                    uint8_t subbands);
+
+OI_STATUS OI_CODEC_SBC_DecoderConfigureMSbc(OI_CODEC_SBC_DECODER_CONTEXT* context);
 
 /**
  * This function sets the decoder parameters for a raw decode where the decoder
@@ -323,10 +326,9 @@ OI_STATUS OI_CODEC_SBC_DecoderLimit(OI_CODEC_SBC_DECODER_CONTEXT* context,
  *
  * @param maxBitpool     The maximum bitpool size for this context
  */
-OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(
-    OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BOOL enhanced, uint8_t frequency,
-    uint8_t mode, uint8_t subbands, uint8_t blocks, uint8_t alloc,
-    uint8_t maxBitpool);
+OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BOOL enhanced,
+                                           uint8_t frequency, uint8_t mode, uint8_t subbands,
+                                           uint8_t blocks, uint8_t alloc, uint8_t maxBitpool);
 
 /**
  * Decode one SBC frame. The frame has no header bytes. The context must have
@@ -359,9 +361,8 @@ OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(
  *                      written. Note that this differs from the semantics of
  *                      frameBytes.
  */
-OI_STATUS OI_CODEC_SBC_DecodeRaw(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                 uint8_t bitpool, const OI_BYTE** frameData,
-                                 uint32_t* frameBytes, int16_t* pcmData,
+OI_STATUS OI_CODEC_SBC_DecodeRaw(OI_CODEC_SBC_DECODER_CONTEXT* context, uint8_t bitpool,
+                                 const OI_BYTE** frameData, uint32_t* frameBytes, int16_t* pcmData,
                                  uint32_t* pcmBytes);
 
 /**
@@ -390,10 +391,8 @@ OI_STATUS OI_CODEC_SBC_DecodeRaw(OI_CODEC_SBC_DECODER_CONTEXT* context,
  *                      written. Note that this differs from the semantics of
  *                      frameBytes.
  */
-OI_STATUS OI_CODEC_SBC_DecodeFrame(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                   const OI_BYTE** frameData,
-                                   uint32_t* frameBytes, int16_t* pcmData,
-                                   uint32_t* pcmBytes);
+OI_STATUS OI_CODEC_SBC_DecodeFrame(OI_CODEC_SBC_DECODER_CONTEXT* context, const OI_BYTE** frameData,
+                                   uint32_t* frameBytes, int16_t* pcmData, uint32_t* pcmBytes);
 
 /**
  * Calculate the number of SBC frames but don't decode. CRC's are not checked,
@@ -423,8 +422,7 @@ uint8_t OI_CODEC_SBC_FrameCount(OI_BYTE* frameData, uint32_t frameBytes);
  *                      operation.
  *
  */
-OI_STATUS OI_CODEC_SBC_SkipFrame(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                 const OI_BYTE** frameData,
+OI_STATUS OI_CODEC_SBC_SkipFrame(OI_CODEC_SBC_DECODER_CONTEXT* context, const OI_BYTE** frameData,
                                  uint32_t* frameBytes);
 
 /* Common functions */
@@ -447,8 +445,7 @@ uint16_t OI_CODEC_SBC_CalculateFramelen(OI_CODEC_SBC_FRAME_INFO* frame);
  *
  * @return the maximum bitpool that will fit in the specified frame length
  */
-uint16_t OI_CODEC_SBC_CalculateBitpool(OI_CODEC_SBC_FRAME_INFO* frame,
-                                       uint16_t frameLen);
+uint16_t OI_CODEC_SBC_CalculateBitpool(OI_CODEC_SBC_FRAME_INFO* frame, uint16_t frameLen);
 
 /**
   Calculate the bit rate.
