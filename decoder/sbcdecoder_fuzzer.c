@@ -1,9 +1,9 @@
 #include <stddef.h>
-#include <stdio.h>
+
 #include "oi_codec_sbc.h"
 
 #define CODEC_DATA_WORDS(numChannels, numBuffers)                              \
-  (((sizeof(int32_t) * SBC_MAX_BLOCKS * (numChannels)*SBC_MAX_BANDS) +         \
+  (((sizeof(int32_t) * SBC_MAX_BLOCKS * (numChannels) * SBC_MAX_BANDS) +       \
     (sizeof(SBC_BUFFER_T) * SBC_MAX_CHANNELS * SBC_MAX_BANDS * (numBuffers)) + \
     (sizeof(uint32_t) - 1)) /                                                  \
    sizeof(uint32_t))
@@ -30,17 +30,14 @@
 #define SBC_MAX_SAMPLES_PER_FRAME (SBC_MAX_BANDS * SBC_MAX_BLOCKS)
 
 static OI_CODEC_SBC_DECODER_CONTEXT btif_a2dp_sink_context;
-static uint32_t btif_a2dp_sink_context_data[CODEC_DATA_WORDS(
-    2, SBC_CODEC_FAST_FILTER_BUFFERS)];
+static uint32_t btif_a2dp_sink_context_data[CODEC_DATA_WORDS(2, SBC_CODEC_FAST_FILTER_BUFFERS)];
 
-static int16_t
-    btif_a2dp_sink_pcm_data[15 * SBC_MAX_SAMPLES_PER_FRAME * SBC_MAX_CHANNELS];
+static int16_t btif_a2dp_sink_pcm_data[15 * SBC_MAX_SAMPLES_PER_FRAME * SBC_MAX_CHANNELS];
 
 int LLVMFuzzerInitialize(int argc, char** argv) {
   (void)argc;
   (void)argv;
-  OI_CODEC_SBC_DecoderReset(&btif_a2dp_sink_context,
-                            btif_a2dp_sink_context_data,
+  OI_CODEC_SBC_DecoderReset(&btif_a2dp_sink_context, btif_a2dp_sink_context_data,
                             sizeof(btif_a2dp_sink_context_data), 2, 2, 0);
 
   return 0;
@@ -49,13 +46,12 @@ int LLVMFuzzerInitialize(int argc, char** argv) {
 int LLVMFuzzerTestOneInput(const uint8_t* buf, size_t len) {
   uint32_t pcmBytes, availPcmBytes;
   int16_t* pcmDataPointer =
-      btif_a2dp_sink_pcm_data; /* Will be overwritten on next packet receipt */
+          btif_a2dp_sink_pcm_data; /* Will be overwritten on next packet receipt */
   availPcmBytes = sizeof(btif_a2dp_sink_pcm_data);
 
   pcmBytes = availPcmBytes;
-  OI_CODEC_SBC_DecodeFrame(&btif_a2dp_sink_context, (const OI_BYTE**)&buf,
-                           (uint32_t*)&len, (int16_t*)pcmDataPointer,
-                           (uint32_t*)&pcmBytes);
+  OI_CODEC_SBC_DecodeFrame(&btif_a2dp_sink_context, (const OI_BYTE**)&buf, (uint32_t*)&len,
+                           (int16_t*)pcmDataPointer, (uint32_t*)&pcmBytes);
 
   return 0;
 }

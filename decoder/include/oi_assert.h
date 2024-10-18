@@ -48,9 +48,10 @@ extern "C" {
 */
 void OI_AssertFail(char* file, int line, char* reason);
 
-#define OI_ASSERT(condition)                                         \
-  {                                                                  \
-    if (!(condition)) OI_AssertFail(__FILE__, __LINE__, #condition); \
+#define OI_ASSERT(condition)                         \
+  {                                                  \
+    if (!(condition))                                \
+      OI_AssertFail(__FILE__, __LINE__, #condition); \
   }
 
 #define OI_ASSERT_FAIL(msg) \

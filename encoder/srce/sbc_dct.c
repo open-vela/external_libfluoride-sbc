@@ -23,6 +23,7 @@
  ******************************************************************************/
 
 #include "sbc_dct.h"
+
 #include "sbc_enc_func_declare.h"
 #include "sbc_encoder.h"
 
@@ -39,37 +40,24 @@
  ******************************************************************************/
 
 #if (SBC_IS_64_MULT_IN_IDCT == FALSE)
-#define SBC_COS_PI_SUR_4                              \
-  (0x00005a82) /* ((0x8000) * 0.7071)     = cos(pi/4) \
-                  */
-#define SBC_COS_PI_SUR_8 \
-  (0x00007641) /* ((0x8000) * 0.9239)     = (cos(pi/8)) */
-#define SBC_COS_3PI_SUR_8 \
-  (0x000030fb) /* ((0x8000) * 0.3827)     = (cos(3*pi/8)) */
-#define SBC_COS_PI_SUR_16 \
-  (0x00007d8a) /* ((0x8000) * 0.9808))     = (cos(pi/16)) */
-#define SBC_COS_3PI_SUR_16 \
-  (0x00006a6d) /* ((0x8000) * 0.8315))     = (cos(3*pi/16)) */
-#define SBC_COS_5PI_SUR_16 \
-  (0x0000471c) /* ((0x8000) * 0.5556))     = (cos(5*pi/16)) */
-#define SBC_COS_7PI_SUR_16 \
-  (0x000018f8) /* ((0x8000) * 0.1951))     = (cos(7*pi/16)) */
+#define SBC_COS_PI_SUR_4                                                       \
+  (0x00005a82)                          /* ((0x8000) * 0.7071)     = cos(pi/4) \
+                                         */
+#define SBC_COS_PI_SUR_8 (0x00007641)   /* ((0x8000) * 0.9239)     = (cos(pi/8)) */
+#define SBC_COS_3PI_SUR_8 (0x000030fb)  /* ((0x8000) * 0.3827)     = (cos(3*pi/8)) */
+#define SBC_COS_PI_SUR_16 (0x00007d8a)  /* ((0x8000) * 0.9808))     = (cos(pi/16)) */
+#define SBC_COS_3PI_SUR_16 (0x00006a6d) /* ((0x8000) * 0.8315))     = (cos(3*pi/16)) */
+#define SBC_COS_5PI_SUR_16 (0x0000471c) /* ((0x8000) * 0.5556))     = (cos(5*pi/16)) */
+#define SBC_COS_7PI_SUR_16 (0x000018f8) /* ((0x8000) * 0.1951))     = (cos(7*pi/16)) */
 #define SBC_IDCT_MULT(a, b, c) SBC_MULT_32_16_SIMPLIFIED(a, b, c)
 #else
-#define SBC_COS_PI_SUR_4 \
-  (0x5A827999) /* ((0x80000000) * 0.707106781)      = (cos(pi/4)   ) */
-#define SBC_COS_PI_SUR_8 \
-  (0x7641AF3C) /* ((0x80000000) * 0.923879533)      = (cos(pi/8)   ) */
-#define SBC_COS_3PI_SUR_8 \
-  (0x30FBC54D) /* ((0x80000000) * 0.382683432)      = (cos(3*pi/8) ) */
-#define SBC_COS_PI_SUR_16 \
-  (0x7D8A5F3F) /* ((0x80000000) * 0.98078528 ))     = (cos(pi/16)  ) */
-#define SBC_COS_3PI_SUR_16 \
-  (0x6A6D98A4) /* ((0x80000000) * 0.831469612))     = (cos(3*pi/16)) */
-#define SBC_COS_5PI_SUR_16 \
-  (0x471CECE6) /* ((0x80000000) * 0.555570233))     = (cos(5*pi/16)) */
-#define SBC_COS_7PI_SUR_16 \
-  (0x18F8B83C) /* ((0x80000000) * 0.195090322))     = (cos(7*pi/16)) */
+#define SBC_COS_PI_SUR_4 (0x5A827999)   /* ((0x80000000) * 0.707106781)      = (cos(pi/4)   ) */
+#define SBC_COS_PI_SUR_8 (0x7641AF3C)   /* ((0x80000000) * 0.923879533)      = (cos(pi/8)   ) */
+#define SBC_COS_3PI_SUR_8 (0x30FBC54D)  /* ((0x80000000) * 0.382683432)      = (cos(3*pi/8) ) */
+#define SBC_COS_PI_SUR_16 (0x7D8A5F3F)  /* ((0x80000000) * 0.98078528 ))     = (cos(pi/16)  ) */
+#define SBC_COS_3PI_SUR_16 (0x6A6D98A4) /* ((0x80000000) * 0.831469612))     = (cos(3*pi/16)) */
+#define SBC_COS_5PI_SUR_16 (0x471CECE6) /* ((0x80000000) * 0.555570233))     = (cos(5*pi/16)) */
+#define SBC_COS_7PI_SUR_16 (0x18F8B83C) /* ((0x80000000) * 0.195090322))     = (cos(7*pi/16)) */
 #define SBC_IDCT_MULT(a, b, c) SBC_MULT_32_32(a, b, c)
 #endif /* SBC_IS_64_MULT_IN_IDCT */
 
@@ -112,10 +100,8 @@ void SBC_FastIDCT8(int32_t* pInVect, int32_t* pOutVect) {
 
   /* 2-point IDCT of x0 and x4 as in (11) */
   temp = x0;
-  SBC_IDCT_MULT(SBC_COS_PI_SUR_4, (x0 + x4),
-                x0); /*x0 = ( x0 + x4 ) * cos(1*pi/4) ; */
-  SBC_IDCT_MULT(SBC_COS_PI_SUR_4, (temp - x4),
-                x4); /*x4 = ( temp - x4 ) * cos(1*pi/4) ; */
+  SBC_IDCT_MULT(SBC_COS_PI_SUR_4, (x0 + x4), x0);   /*x0 = ( x0 + x4 ) * cos(1*pi/4) ; */
+  SBC_IDCT_MULT(SBC_COS_PI_SUR_4, (temp - x4), x4); /*x4 = ( temp - x4 ) * cos(1*pi/4) ; */
 
   /* rearrangement of x2 and x6 as in (15) */
   x2 -= x6;
@@ -124,10 +110,8 @@ void SBC_FastIDCT8(int32_t* pInVect, int32_t* pOutVect) {
   /* 2-point IDCT of x2 and x6 and post-multiplication as in (15) */
   SBC_IDCT_MULT(SBC_COS_PI_SUR_4, x6, x6); /*x6 = x6 * cos(1*pi/4) ; */
   temp = x2;
-  SBC_IDCT_MULT(SBC_COS_PI_SUR_8, (x2 + x6),
-                x2); /*x2 = ( x2 + x6 ) * cos(1*pi/8) ; */
-  SBC_IDCT_MULT(SBC_COS_3PI_SUR_8, (temp - x6),
-                x6); /*x6 = ( temp - x6 ) * cos(3*pi/8) ;*/
+  SBC_IDCT_MULT(SBC_COS_PI_SUR_8, (x2 + x6), x2);    /*x2 = ( x2 + x6 ) * cos(1*pi/8) ; */
+  SBC_IDCT_MULT(SBC_COS_3PI_SUR_8, (temp - x6), x6); /*x6 = ( temp - x6 ) * cos(3*pi/8) ;*/
 
   /* 4-point IDCT of x0,x2,x4 and x6 as in (11) */
   res_even[0] = x0 + x2;
@@ -154,10 +138,8 @@ void SBC_FastIDCT8(int32_t* pInVect, int32_t* pOutVect) {
 
   /* 2-point IDCT of x3 and x7 and post-multiplication as in (15) */
   temp = x3;
-  SBC_IDCT_MULT(SBC_COS_PI_SUR_8, (x3 + x7),
-                x3); /*x3 = ( x3 + x7 ) * cos(1*pi/8)  ; */
-  SBC_IDCT_MULT(SBC_COS_3PI_SUR_8, (temp - x7),
-                x7); /*x7 = ( temp - x7 ) * cos(3*pi/8) ;*/
+  SBC_IDCT_MULT(SBC_COS_PI_SUR_8, (x3 + x7), x3);    /*x3 = ( x3 + x7 ) * cos(1*pi/8)  ; */
+  SBC_IDCT_MULT(SBC_COS_3PI_SUR_8, (temp - x7), x7); /*x7 = ( temp - x7 ) * cos(3*pi/8) ;*/
 
   /* 4-point IDCT of x1,x3,x5 and x7 and post multiplication by diagonal matrix
    * as in (14) */
@@ -189,9 +171,7 @@ void SBC_FastIDCT8(int32_t* pInVect, int32_t* pOutVect) {
       /*temp += (int32_t)(((int64_t)M[(Index*strEncParams->numOfSubBands*2)+k] *
        * Y[k]) >> 16 );*/
       temp += (gas16AnalDCTcoeff8[(Index * 8 * 2) + k] * (pInVect[k] >> 16));
-      temp +=
-          ((gas16AnalDCTcoeff8[(Index * 8 * 2) + k] * (pInVect[k] & 0xFFFF)) >>
-           16);
+      temp += ((gas16AnalDCTcoeff8[(Index * 8 * 2) + k] * (pInVect[k] & 0xFFFF)) >> 16);
     }
     pOutVect[Index] = temp;
   }
@@ -258,9 +238,7 @@ void SBC_FastIDCT4(int32_t* pInVect, int32_t* pOutVect) {
       /*temp += (int32_t)(((int64_t)M[(Index*strEncParams->numOfSubBands*2)+k] *
        * Y[k]) >> 16 ); */
       temp += (gas16AnalDCTcoeff4[(Index * 4 * 2) + k] * (pInVect[k] >> 16));
-      temp +=
-          ((gas16AnalDCTcoeff4[(Index * 4 * 2) + k] * (pInVect[k] & 0xFFFF)) >>
-           16);
+      temp += ((gas16AnalDCTcoeff4[(Index * 4 * 2) + k] * (pInVect[k] & 0xFFFF)) >> 16);
     }
     pOutVect[Index] = temp;
   }

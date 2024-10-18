@@ -39,8 +39,7 @@ extern "C" {
 #endif
 
 #ifndef FALSE
-#define FALSE \
-  0 /**< This define statement sets FALSE as a preprocessor alias for 0. */
+#define FALSE 0 /**< This define statement sets FALSE as a preprocessor alias for 0. */
 #endif
 
 #ifndef TRUE
@@ -74,17 +73,16 @@ extern "C" {
 #define OI_INT16_MAX ((int16_t)0x7FFF) /**< decimal value: 32767 */
 #define OI_INT32_MIN                                       \
   ((int32_t)0x80000000) /**< decimal value: -2,147,483,648 \
-                           */
-#define OI_INT32_MAX                                                       \
-  ((int32_t)0x7FFFFFFF)                  /**< decimal value: 2,147,483,647 \
-                                            */
-#define OI_UINT8_MIN ((uint8_t)0)        /**< decimal value: 0 */
-#define OI_UINT8_MAX ((uint8_t)0xFF)     /**< decimal value: 255 */
-#define OI_UINT16_MIN ((uint16_t)0)      /**< decimal value: 0 */
-#define OI_UINT16_MAX ((uint16_t)0xFFFF) /**< decimal value: 65535 */
-#define OI_UINT32_MIN ((uint32_t)0)      /**< decimal value: 0 */
-#define OI_UINT32_MAX \
-  ((uint32_t)0xFFFFFFFF) /**< decimal value: 4,294,967,295 */
+                         */
+#define OI_INT32_MAX                                                           \
+  ((int32_t)0x7FFFFFFF)                      /**< decimal value: 2,147,483,647 \
+                                              */
+#define OI_UINT8_MIN ((uint8_t)0)            /**< decimal value: 0 */
+#define OI_UINT8_MAX ((uint8_t)0xFF)         /**< decimal value: 255 */
+#define OI_UINT16_MIN ((uint16_t)0)          /**< decimal value: 0 */
+#define OI_UINT16_MAX ((uint16_t)0xFFFF)     /**< decimal value: 65535 */
+#define OI_UINT32_MIN ((uint32_t)0)          /**< decimal value: 0 */
+#define OI_UINT32_MAX ((uint32_t)0xFFFFFFFF) /**< decimal value: 4,294,967,295 */
 
 /**
  * @}
@@ -127,16 +125,10 @@ typedef struct {
   uint32_t I4; /**< least significant 32 bits */
 } OI_UINT128;
 
-#define OI_UINT128_MIN                                                \
-  {                                                                   \
-    (uint32_t)0x00000000, (uint32_t)0x00000000, (uint32_t)0x00000000, \
-        (uint32_t)0x00000000                                          \
-  }
-#define OI_UINT128_MAX                                                \
-  {                                                                   \
-    (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF, \
-        (uint32_t)0XFFFFFFFF                                          \
-  }
+#define OI_UINT128_MIN \
+  { (uint32_t)0x00000000, (uint32_t)0x00000000, (uint32_t)0x00000000, (uint32_t)0x00000000 }
+#define OI_UINT128_MAX \
+  { (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF }
 
 /* signed 128-bit integer as a structure of three unsigned 32-bit integers and
  * one signed 32-bit integer */
@@ -147,16 +139,10 @@ typedef struct {
   uint32_t I4; /**< least significant 32 bits as an unsigned integer */
 } OI_INT128;
 
-#define OI_INT128_MIN                                                 \
-  {                                                                   \
-    (uint32_t)0x80000000, (uint32_t)0x00000000, (uint32_t)0x00000000, \
-        (uint32_t)0x00000000                                          \
-  }
-#define OI_INT128_MAX                                                 \
-  {                                                                   \
-    (uint32_t)0X7FFFFFFF, (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF, \
-        (uint32_t)0XFFFFFFFF                                          \
-  }
+#define OI_INT128_MIN \
+  { (uint32_t)0x80000000, (uint32_t)0x00000000, (uint32_t)0x00000000, (uint32_t)0x00000000 }
+#define OI_INT128_MAX \
+  { (uint32_t)0X7FFFFFFF, (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF, (uint32_t)0XFFFFFFFF }
 
 /**
  * @}

@@ -33,6 +33,7 @@
  ******************************************************************************/
 
 #include <stdarg.h>
+
 #include "oi_bt_spec.h"
 #include "oi_common.h"
 #include "oi_string.h"
@@ -80,9 +81,8 @@ typedef void (*OI_SCHEDULED_CALLBACK)(void* arg);
  * @return                    OI_OK if the function was registered, or an error
  *                            status.
  */
-OI_STATUS OI_ScheduleCallbackFunction(OI_SCHEDULED_CALLBACK callbackFunction,
-                                      void* arg, OI_INTERVAL timeout,
-                                      OI_CALLBACK_HANDLE* handle);
+OI_STATUS OI_ScheduleCallbackFunction(OI_SCHEDULED_CALLBACK callbackFunction, void* arg,
+                                      OI_INTERVAL timeout, OI_CALLBACK_HANDLE* handle);
 
 /**
  * Cancels a function registered with OI_ScheduleCallbackFunction() before its
@@ -222,8 +222,7 @@ void OI_VPrintf(const OI_CHAR* format, va_list argp);
  *
  * @return   Number of characters written or -1 in the case of an error.
  */
-int32_t OI_SNPrintf(OI_CHAR* buffer, uint16_t bufLen, const OI_CHAR* format,
-                    ...);
+int32_t OI_SNPrintf(OI_CHAR* buffer, uint16_t bufLen, const OI_CHAR* format, ...);
 
 /**
  * Var-args version OI_SNPrintf
@@ -238,8 +237,7 @@ int32_t OI_SNPrintf(OI_CHAR* buffer, uint16_t bufLen, const OI_CHAR* format,
  *
  * @return   Number of characters written or -1 in the case of an error.
  */
-int32_t OI_VSNPrintf(OI_CHAR* buffer, uint16_t bufLen, const OI_CHAR* format,
-                     va_list argp);
+int32_t OI_VSNPrintf(OI_CHAR* buffer, uint16_t bufLen, const OI_CHAR* format, va_list argp);
 
 /**
  * Convert a string to an integer.
@@ -314,8 +312,7 @@ const OI_CHAR* OI_ScanStr(const OI_CHAR* str, OI_CHAR* outStr, uint16_t len);
  * @return       A pointer to the first character following the matched value or
  *               the pointer passed in if there was no matching text.
  */
-const OI_CHAR* OI_ScanAlt(const OI_CHAR* str, const OI_CHAR* alts,
-                          OI_INT* index);
+const OI_CHAR* OI_ScanAlt(const OI_CHAR* str, const OI_CHAR* alts, OI_INT* index);
 
 /** Get a character from a digit integer value (0 - 9). */
 #define OI_DigitToChar(d) ((d) + '0')

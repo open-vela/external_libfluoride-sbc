@@ -34,19 +34,16 @@ This file drives SBC decoding.
 @{
 */
 
-#include <stdio.h>
 #include "oi_bitstream.h"
 #include "oi_codec_sbc_private.h"
 
 OI_CHAR* const OI_Codec_Copyright =
-    "Copyright 2002-2007 Open Interface North America, Inc. All rights "
-    "reserved";
+        "Copyright 2002-2007 Open Interface North America, Inc. All rights "
+        "reserved";
 
-INLINE OI_STATUS internal_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                       uint32_t* decoderData,
-                                       uint32_t decoderDataBytes,
-                                       OI_BYTE maxChannels, OI_BYTE pcmStride,
-                                       OI_BOOL enhanced) {
+INLINE OI_STATUS internal_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context, uint32_t* decoderData,
+                                       uint32_t decoderDataBytes, OI_BYTE maxChannels,
+                                       OI_BYTE pcmStride, OI_BOOL enhanced) {
   OI_UINT i;
   OI_STATUS status;
 
@@ -63,8 +60,8 @@ INLINE OI_STATUS internal_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context,
   }
 #endif
 
-  status = OI_CODEC_SBC_Alloc(&context->common, decoderData, decoderDataBytes,
-                              maxChannels, pcmStride);
+  status = OI_CODEC_SBC_Alloc(&context->common, decoderData, decoderDataBytes, maxChannels,
+                              pcmStride);
 
   if (!OI_SUCCESS(status)) {
     return status;
@@ -85,8 +82,7 @@ INLINE OI_STATUS internal_DecoderReset(OI_CODEC_SBC_DECODER_CONTEXT* context,
  * syncword has already been examined, and the enhanced mode flag set, by
  * FindSyncword.
  */
-INLINE void OI_SBC_ReadHeader(OI_CODEC_SBC_COMMON_CONTEXT* common,
-                              const OI_BYTE* data) {
+INLINE void OI_SBC_ReadHeader(OI_CODEC_SBC_COMMON_CONTEXT* common, const OI_BYTE* data) {
   OI_CODEC_SBC_FRAME_INFO* frame = &common->frameInfo;
   uint8_t d1;
 
@@ -122,20 +118,19 @@ INLINE void OI_SBC_ReadHeader(OI_CODEC_SBC_COMMON_CONTEXT* common,
   frame->crc = data[3];
 }
 
-#define LOW(x) ((x)&0xf)
+#define LOW(x) ((x) & 0xf)
 #define HIGH(x) ((x) >> 4)
 
 /*
  * Read scalefactor values and prepare the bitstream for OI_SBC_ReadSamples
  */
-PRIVATE void OI_SBC_ReadScalefactors(OI_CODEC_SBC_COMMON_CONTEXT* common,
-                                     const OI_BYTE* b, OI_BITSTREAM* bs) {
+PRIVATE void OI_SBC_ReadScalefactors(OI_CODEC_SBC_COMMON_CONTEXT* common, const OI_BYTE* b,
+                                     OI_BITSTREAM* bs) {
   OI_UINT i = common->frameInfo.nrof_subbands * common->frameInfo.nrof_channels;
   int8_t* scale_factor = common->scale_factor;
   OI_UINT f;
 
-  if (common->frameInfo.nrof_subbands == 8 ||
-      common->frameInfo.mode != SBC_JOINT_STEREO) {
+  if (common->frameInfo.nrof_subbands == 8 || common->frameInfo.mode != SBC_JOINT_STEREO) {
     if (common->frameInfo.mode == SBC_JOINT_STEREO) {
       common->frameInfo.join = *b++;
     } else {
@@ -153,8 +148,7 @@ PRIVATE void OI_SBC_ReadScalefactors(OI_CODEC_SBC_COMMON_CONTEXT* common,
      */
     OI_BITSTREAM_ReadInit(bs, b);
   } else {
-    OI_ASSERT(common->frameInfo.nrof_subbands == 4 &&
-              common->frameInfo.mode == SBC_JOINT_STEREO);
+    OI_ASSERT(common->frameInfo.nrof_subbands == 4 && common->frameInfo.mode == SBC_JOINT_STEREO);
     common->frameInfo.join = HIGH(f = *b++);
     i = (i - 1) / 2;
     do {
@@ -175,16 +169,14 @@ PRIVATE void OI_SBC_ReadScalefactors(OI_CODEC_SBC_COMMON_CONTEXT* common,
 }
 
 /** Read quantized subband samples from the input bitstream and expand them. */
-PRIVATE void OI_SBC_ReadSamples(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                OI_BITSTREAM* global_bs) {
+PRIVATE void OI_SBC_ReadSamples(OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BITSTREAM* global_bs) {
   OI_CODEC_SBC_COMMON_CONTEXT* common = &context->common;
   OI_UINT nrof_blocks = common->frameInfo.nrof_blocks;
   int32_t* RESTRICT s = common->subdata;
   const uint8_t* ptr = global_bs->ptr.r;
   uint32_t value = global_bs->value;
   OI_UINT bitPtr = global_bs->bitPtr;
-  const OI_UINT iter_count =
-      common->frameInfo.nrof_channels * common->frameInfo.nrof_subbands;
+  const OI_UINT iter_count = common->frameInfo.nrof_channels * common->frameInfo.nrof_subbands;
   do {
     OI_UINT n;
     for (n = 0; n < iter_count; ++n) {
