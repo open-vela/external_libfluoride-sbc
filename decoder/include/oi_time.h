@@ -64,23 +64,22 @@ typedef uint16_t OI_INTERVAL;
  * Macro to convert seconds to OI_INTERVAL time units
  */
 
-#define OI_SECONDS(n) ((OI_INTERVAL)((n)*OI_INTERVALS_PER_SECOND))
+#define OI_SECONDS(n) ((OI_INTERVAL)((n) * OI_INTERVALS_PER_SECOND))
 
 /**
  * Macro to convert milliseconds to OI_INTERVAL time units (Rounded Up)
  */
 
-#define OI_MSECONDS(n) \
-  ((OI_INTERVAL)(((n) + MSECS_PER_OI_INTERVAL - 1) / MSECS_PER_OI_INTERVAL))
+#define OI_MSECONDS(n) ((OI_INTERVAL)(((n) + MSECS_PER_OI_INTERVAL - 1) / MSECS_PER_OI_INTERVAL))
 
 /**
  * Macro to convert minutes to OI_INTERVAL time units
  */
 
-#define OI_MINUTES(n) ((OI_INTERVAL)((n)*OI_SECONDS(60)))
+#define OI_MINUTES(n) ((OI_INTERVAL)((n) * OI_SECONDS(60)))
 
 /** Convert an OI_INTERVAL to milliseconds. */
-#define OI_INTERVAL_TO_MILLISECONDS(i) ((i)*MSECS_PER_OI_INTERVAL)
+#define OI_INTERVAL_TO_MILLISECONDS(i) ((i) * MSECS_PER_OI_INTERVAL)
 
 /**
  * The stack depends on relative not absolute time. Any mapping between the

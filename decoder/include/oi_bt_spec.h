@@ -200,10 +200,10 @@ typedef uint32_t OI_BT_DEVICE_CLASS;
  */
 #define OI_BT_TICK 625
 /* some macros to convert to/from baseband clock ticks - no floating point! */
-#define OI_SECONDS_TO_BT_TICKS(secs) ((secs)*1600)
+#define OI_SECONDS_TO_BT_TICKS(secs) ((secs) * 1600)
 #define OI_BT_TICKS_TO_SECONDS(ticks) ((ticks) / 1600)
-#define OI_MSECS_TO_BT_TICKS(msecs) (((msecs)*8) / 5)
-#define OI_BT_TICKS_TO_MSECS(ticks) (((ticks)*5) / 8)
+#define OI_MSECS_TO_BT_TICKS(msecs) (((msecs) * 8) / 5)
+#define OI_BT_TICKS_TO_MSECS(ticks) (((ticks) * 5) / 8)
 
 /** EIR byte order */
 #define OI_EIR_BYTE_ORDER OI_LITTLE_ENDIAN_BYTE_ORDER

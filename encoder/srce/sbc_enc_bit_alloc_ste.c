@@ -32,11 +32,11 @@ extern const int16_t sbc_enc_as16Offset4[4][4];
 extern const int16_t sbc_enc_as16Offset8[4][8];
 
 /****************************************************************************
-* BitAlloc - Calculates the required number of bits for the given scale factor
-* and the number of subbands.
-*
-* RETURNS : N/A
-*/
+ * BitAlloc - Calculates the required number of bits for the given scale factor
+ * and the number of subbands.
+ *
+ * RETURNS : N/A
+ */
 
 void sbc_enc_bit_alloc_ste(SBC_ENC_PARAMS* pstrCodecParams) {
   /* CAUTIOM -> mips optim for arm 32 require to use int32_t instead of int16_t
@@ -67,26 +67,27 @@ void sbc_enc_bit_alloc_ste(SBC_ENC_PARAMS* pstrCodecParams) {
     ps16GenBufPtr = ps16BitNeed;
     for (s32Ch = 0; s32Ch < 2; s32Ch++) {
       if (s32NumOfSubBands == 4) {
-        ps16GenTabPtr =
-            (int16_t*)sbc_enc_as16Offset4[pstrCodecParams->s16SamplingFreq];
+        ps16GenTabPtr = (int16_t*)sbc_enc_as16Offset4[pstrCodecParams->s16SamplingFreq];
       } else {
-        ps16GenTabPtr =
-            (int16_t*)sbc_enc_as16Offset8[pstrCodecParams->s16SamplingFreq];
+        ps16GenTabPtr = (int16_t*)sbc_enc_as16Offset8[pstrCodecParams->s16SamplingFreq];
       }
 
       for (s32Sb = 0; s32Sb < s32NumOfSubBands; s32Sb++) {
-        if (*pas16ScaleFactor == 0)
+        if (*pas16ScaleFactor == 0) {
           *ps16GenBufPtr = -5;
-        else {
+        } else {
           s32Loudness = (int32_t)(*pas16ScaleFactor - *ps16GenTabPtr);
 
-          if (s32Loudness > 0)
+          if (s32Loudness > 0) {
             *ps16GenBufPtr = (int16_t)(s32Loudness >> 1);
-          else
+          } else {
             *ps16GenBufPtr = (int16_t)s32Loudness;
+          }
         }
 
-        if (*ps16GenBufPtr > s32MaxBitNeed) s32MaxBitNeed = *ps16GenBufPtr;
+        if (*ps16GenBufPtr > s32MaxBitNeed) {
+          s32MaxBitNeed = *ps16GenBufPtr;
+        }
         pas16ScaleFactor++;
         ps16GenBufPtr++;
         ps16GenTabPtr++;
@@ -105,12 +106,12 @@ void sbc_enc_bit_alloc_ste(SBC_ENC_PARAMS* pstrCodecParams) {
     ps16GenBufPtr = ps16BitNeed;
 
     for (s32Sb = 0; s32Sb < 2 * s32NumOfSubBands; s32Sb++) {
-      if ((*ps16GenBufPtr >= s32BitSlice + 1) &&
-          (*ps16GenBufPtr < s32BitSlice + 16)) {
-        if (*(ps16GenBufPtr) == s32BitSlice + 1)
+      if ((*ps16GenBufPtr >= s32BitSlice + 1) && (*ps16GenBufPtr < s32BitSlice + 16)) {
+        if (*(ps16GenBufPtr) == s32BitSlice + 1) {
           s32SliceCount += 2;
-        else
+        } else {
           s32SliceCount++;
+        }
       }
       ps16GenBufPtr++;
     }
@@ -126,12 +127,13 @@ void sbc_enc_bit_alloc_ste(SBC_ENC_PARAMS* pstrCodecParams) {
   ps16GenArrPtr = pstrCodecParams->as16Bits;
   for (s32Ch = 0; s32Ch < 2; s32Ch++) {
     for (s32Sb = 0; s32Sb < s32NumOfSubBands; s32Sb++) {
-      if (*ps16GenBufPtr < s32BitSlice + 2)
+      if (*ps16GenBufPtr < s32BitSlice + 2) {
         *ps16GenArrPtr = 0;
-      else
+      } else {
         *ps16GenArrPtr = ((*(ps16GenBufPtr)-s32BitSlice) < 16)
-                             ? (int16_t)(*(ps16GenBufPtr)-s32BitSlice)
-                             : 16;
+                                 ? (int16_t)(*(ps16GenBufPtr)-s32BitSlice)
+                                 : 16;
+      }
       ps16GenBufPtr++;
       ps16GenArrPtr++;
     }

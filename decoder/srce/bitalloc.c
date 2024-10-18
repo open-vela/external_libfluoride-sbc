@@ -38,6 +38,7 @@ frame length and bitrate.
 */
 
 #include <oi_codec_sbc_private.h>
+
 #include "oi_utils.h"
 
 uint32_t OI_SBC_MaxBitpool(OI_CODEC_SBC_FRAME_INFO* frame) {
@@ -79,14 +80,12 @@ PRIVATE uint32_t internal_CalculateBitrate(OI_CODEC_SBC_FRAME_INFO* frame) {
   OI_UINT blocksbands;
   blocksbands = frame->nrof_subbands * frame->nrof_blocks;
 
-  return DIVIDE(8 * internal_CalculateFramelen(frame) * frame->frequency,
-                blocksbands);
+  return DIVIDE(8 * internal_CalculateFramelen(frame) * frame->frequency, blocksbands);
 }
 
-INLINE uint16_t OI_SBC_CalculateFrameAndHeaderlen(
-    OI_CODEC_SBC_FRAME_INFO* frame, OI_UINT* headerLen_) {
-  OI_UINT headerLen =
-      SBC_HEADER_LEN + frame->nrof_subbands * frame->nrof_channels / 2;
+INLINE uint16_t OI_SBC_CalculateFrameAndHeaderlen(OI_CODEC_SBC_FRAME_INFO* frame,
+                                                  OI_UINT* headerLen_) {
+  OI_UINT headerLen = SBC_HEADER_LEN + frame->nrof_subbands * frame->nrof_channels / 2;
 
   if (frame->mode == SBC_JOINT_STEREO) {
     headerLen++;
@@ -121,10 +120,9 @@ INLINE uint16_t OI_SBC_CalculateFrameAndHeaderlen(
  * @return              The SBC bit need
  *
  */
-OI_UINT computeBitneed(OI_CODEC_SBC_COMMON_CONTEXT* common, uint8_t* bitneeds,
-                       OI_UINT ch, OI_UINT* preferredBitpool) {
-  static const int8_t offset4[4][4] = {
-      {-1, 0, 0, 0}, {-2, 0, 0, 1}, {-2, 0, 0, 1}, {-2, 0, 0, 1}};
+OI_UINT computeBitneed(OI_CODEC_SBC_COMMON_CONTEXT* common, uint8_t* bitneeds, OI_UINT ch,
+                       OI_UINT* preferredBitpool) {
+  static const int8_t offset4[4][4] = {{-1, 0, 0, 0}, {-2, 0, 0, 1}, {-2, 0, 0, 1}, {-2, 0, 0, 1}};
 
   static const int8_t offset8[4][8] = {{-2, 0, 0, 0, 0, 0, 0, 1},
                                        {-3, 0, 0, 0, 0, 0, 1, 2},
@@ -242,9 +240,8 @@ OI_UINT computeBitneed(OI_CODEC_SBC_COMMON_CONTEXT* common, uint8_t* bitneeds,
  *
  * @return   The adjustment.
  */
-OI_INT adjustToFitBitpool(const OI_UINT bitpool, uint32_t* bitneeds,
-                          const OI_UINT subbands, OI_UINT bitcount,
-                          OI_UINT* excess) {
+OI_INT adjustToFitBitpool(const OI_UINT bitpool, uint32_t* bitneeds, const OI_UINT subbands,
+                          OI_UINT bitcount, OI_UINT* excess) {
   OI_INT maxBitadjust = 0;
   OI_INT bitadjust = (bitcount > bitpool) ? -8 : 8;
   OI_INT chop = 8;
@@ -329,9 +326,8 @@ INLINE OI_INT allocExcessBits(uint8_t* dest, OI_INT excess) {
   }
 }
 
-void oneChannelBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common,
-                             BITNEED_UNION1* bitneeds, OI_UINT ch,
-                             OI_UINT bitcount) {
+void oneChannelBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common, BITNEED_UNION1* bitneeds,
+                             OI_UINT ch, OI_UINT bitcount) {
   const uint8_t nrof_subbands = common->frameInfo.nrof_subbands;
   OI_UINT excess;
   OI_UINT sb;
@@ -340,8 +336,8 @@ void oneChannelBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common,
 
   {
     OI_UINT ex;
-    bitadjust = adjustToFitBitpool(common->frameInfo.bitpool, bitneeds->uint32,
-                                   nrof_subbands, bitcount, &ex);
+    bitadjust = adjustToFitBitpool(common->frameInfo.bitpool, bitneeds->uint32, nrof_subbands,
+                                   bitcount, &ex);
     /* We want the compiler to put excess into a register */
     excess = ex;
   }
@@ -353,8 +349,7 @@ void oneChannelBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common,
 
   sb = 0;
   while (sb < nrof_subbands) {
-    excess = allocAdjustedBits(&allocBits[sb], bitneeds->uint8[sb] + bitadjust,
-                               excess);
+    excess = allocAdjustedBits(&allocBits[sb], bitneeds->uint8[sb] + bitadjust, excess);
     ++sb;
   }
   sb = 0;

@@ -23,6 +23,7 @@
  *
  ******************************************************************************/
 #include <string.h>
+
 #include "sbc_enc_func_declare.h"
 #include "sbc_encoder.h"
 /*#include <math.h>*/
@@ -34,42 +35,24 @@
 #define WIND_4_SUBBANDS_0_2                                               \
   (int32_t)0x115B1ED2 /* gas32CoeffFor4SBs[16] = -gas32CoeffFor4SBs[24] = \
                          0x115B1ED2 */
-#define WIND_4_SUBBANDS_1_0 \
-  (int32_t)0x001194E6 /* gas32CoeffFor4SBs[1 et 39] = 0x001194E6 */
-#define WIND_4_SUBBANDS_1_1 \
-  (int32_t)0x029DBAA3 /* gas32CoeffFor4SBs[9 et 31] = 0x029DBAA3 */
-#define WIND_4_SUBBANDS_1_2 \
-  (int32_t)0x18F55C90 /* gas32CoeffFor4SBs[17 et 23] = 0x18F55C90 */
-#define WIND_4_SUBBANDS_1_3 \
-  (int32_t)0xF60FAF37 /* gas32CoeffFor4SBs[15 et 25] = 0xF60FAF37 */
-#define WIND_4_SUBBANDS_1_4 \
-  (int32_t)0xFF9BB9D5 /* gas32CoeffFor4SBs[7 et 33] = 0xFF9BB9D5 */
-#define WIND_4_SUBBANDS_2_0 \
-  (int32_t)0x0030E2D3 /* gas32CoeffFor4SBs[2 et 38] = 0x0030E2D3 */
-#define WIND_4_SUBBANDS_2_1 \
-  (int32_t)0x03B23341 /* gas32CoeffFor4SBs[10 et 30] = 0x03B23341 */
-#define WIND_4_SUBBANDS_2_2 \
-  (int32_t)0x1F91CA46 /* gas32CoeffFor4SBs[18 et 22] = 0x1F91CA46 */
-#define WIND_4_SUBBANDS_2_3 \
-  (int32_t)0xFC4F91D4 /* gas32CoeffFor4SBs[14 et 26] = 0xFC4F91D4 */
-#define WIND_4_SUBBANDS_2_4 \
-  (int32_t)0x003D239B /* gas32CoeffFor4SBs[6 et 34] = 0x003D239B */
-#define WIND_4_SUBBANDS_3_0 \
-  (int32_t)0x00599403 /* gas32CoeffFor4SBs[3 et 37] = 0x00599403 */
-#define WIND_4_SUBBANDS_3_1 \
-  (int32_t)0x041EEE40 /* gas32CoeffFor4SBs[11 et 29] = 0x041EEE40 */
-#define WIND_4_SUBBANDS_3_2 \
-  (int32_t)0x2412F251 /* gas32CoeffFor4SBs[19 et 21] = 0x2412F251 */
-#define WIND_4_SUBBANDS_3_3 \
-  (int32_t)0x00C8F2BC /* gas32CoeffFor4SBs[13 et 27] = 0x00C8F2BC */
-#define WIND_4_SUBBANDS_3_4 \
-  (int32_t)0x007F88E4 /* gas32CoeffFor4SBs[5 et 35] = 0x007F88E4 */
-#define WIND_4_SUBBANDS_4_0 \
-  (int32_t)0x007DBCC8 /* gas32CoeffFor4SBs[4 et 36] = 0x007DBCC8 */
-#define WIND_4_SUBBANDS_4_1 \
-  (int32_t)0x034FEE2C /* gas32CoeffFor4SBs[12 et 28] = 0x034FEE2C */
-#define WIND_4_SUBBANDS_4_2 \
-  (int32_t)0x25AC1FF2 /* gas32CoeffFor4SBs[20] = 0x25AC1FF2 */
+#define WIND_4_SUBBANDS_1_0 (int32_t)0x001194E6 /* gas32CoeffFor4SBs[1 et 39] = 0x001194E6 */
+#define WIND_4_SUBBANDS_1_1 (int32_t)0x029DBAA3 /* gas32CoeffFor4SBs[9 et 31] = 0x029DBAA3 */
+#define WIND_4_SUBBANDS_1_2 (int32_t)0x18F55C90 /* gas32CoeffFor4SBs[17 et 23] = 0x18F55C90 */
+#define WIND_4_SUBBANDS_1_3 (int32_t)0xF60FAF37 /* gas32CoeffFor4SBs[15 et 25] = 0xF60FAF37 */
+#define WIND_4_SUBBANDS_1_4 (int32_t)0xFF9BB9D5 /* gas32CoeffFor4SBs[7 et 33] = 0xFF9BB9D5 */
+#define WIND_4_SUBBANDS_2_0 (int32_t)0x0030E2D3 /* gas32CoeffFor4SBs[2 et 38] = 0x0030E2D3 */
+#define WIND_4_SUBBANDS_2_1 (int32_t)0x03B23341 /* gas32CoeffFor4SBs[10 et 30] = 0x03B23341 */
+#define WIND_4_SUBBANDS_2_2 (int32_t)0x1F91CA46 /* gas32CoeffFor4SBs[18 et 22] = 0x1F91CA46 */
+#define WIND_4_SUBBANDS_2_3 (int32_t)0xFC4F91D4 /* gas32CoeffFor4SBs[14 et 26] = 0xFC4F91D4 */
+#define WIND_4_SUBBANDS_2_4 (int32_t)0x003D239B /* gas32CoeffFor4SBs[6 et 34] = 0x003D239B */
+#define WIND_4_SUBBANDS_3_0 (int32_t)0x00599403 /* gas32CoeffFor4SBs[3 et 37] = 0x00599403 */
+#define WIND_4_SUBBANDS_3_1 (int32_t)0x041EEE40 /* gas32CoeffFor4SBs[11 et 29] = 0x041EEE40 */
+#define WIND_4_SUBBANDS_3_2 (int32_t)0x2412F251 /* gas32CoeffFor4SBs[19 et 21] = 0x2412F251 */
+#define WIND_4_SUBBANDS_3_3 (int32_t)0x00C8F2BC /* gas32CoeffFor4SBs[13 et 27] = 0x00C8F2BC */
+#define WIND_4_SUBBANDS_3_4 (int32_t)0x007F88E4 /* gas32CoeffFor4SBs[5 et 35] = 0x007F88E4 */
+#define WIND_4_SUBBANDS_4_0 (int32_t)0x007DBCC8 /* gas32CoeffFor4SBs[4 et 36] = 0x007DBCC8 */
+#define WIND_4_SUBBANDS_4_1 (int32_t)0x034FEE2C /* gas32CoeffFor4SBs[12 et 28] = 0x034FEE2C */
+#define WIND_4_SUBBANDS_4_2 (int32_t)0x25AC1FF2 /* gas32CoeffFor4SBs[20] = 0x25AC1FF2 */
 
 #define WIND_8_SUBBANDS_0_1 (int32_t)0x00B97348 /* 16 0x00B97348 */
 #define WIND_8_SUBBANDS_0_2 (int32_t)0x08B4307A /* 32 0x08B4307A */
@@ -115,45 +98,27 @@
 #define WIND_4_SUBBANDS_0_1                                          \
   (int16_t)0x0166 /* gas32CoeffFor4SBs[8] = -gas32CoeffFor4SBs[32] = \
                      0x01659F45 */
-#define WIND_4_SUBBANDS_0_2                                           \
-  (int16_t)0x115B /* gas32CoeffFor4SBs[16] = -gas32CoeffFor4SBs[24] = \
-                     0x115B1ED2 */
-#define WIND_4_SUBBANDS_1_0 \
-  (int16_t)0x0012 /* gas32CoeffFor4SBs[1 et 39] = 0x001194E6 */
-#define WIND_4_SUBBANDS_1_1 \
-  (int16_t)0x029E /* gas32CoeffFor4SBs[9 et 31] = 0x029DBAA3 */
-#define WIND_4_SUBBANDS_1_2 \
-  (int16_t)0x18F5 /* gas32CoeffFor4SBs[17 et 23] = 0x18F55C90 */
-#define WIND_4_SUBBANDS_1_3 \
-  (int16_t)0xF610 /* gas32CoeffFor4SBs[15 et 25] = 0xF60FAF37 */
-#define WIND_4_SUBBANDS_1_4 \
-  (int16_t)0xFF9C /* gas32CoeffFor4SBs[7 et 33] = 0xFF9BB9D5 */
-#define WIND_4_SUBBANDS_2_0 \
-  (int16_t)0x0031 /* gas32CoeffFor4SBs[2 et 38] = 0x0030E2D3 */
-#define WIND_4_SUBBANDS_2_1 \
-  (int16_t)0x03B2 /* gas32CoeffFor4SBs[10 et 30] = 0x03B23341 */
-#define WIND_4_SUBBANDS_2_2 \
-  (int16_t)0x1F91 /* gas32CoeffFor4SBs[18 et 22] = 0x1F91CA46 */
-#define WIND_4_SUBBANDS_2_3 \
-  (int16_t)0xFC50 /* gas32CoeffFor4SBs[14 et 26] = 0xFC4F91D4 */
-#define WIND_4_SUBBANDS_2_4 \
-  (int16_t)0x003D /* gas32CoeffFor4SBs[6 et 34] = 0x003D239B */
-#define WIND_4_SUBBANDS_3_0 \
-  (int16_t)0x005A /* gas32CoeffFor4SBs[3 et 37] = 0x00599403 */
-#define WIND_4_SUBBANDS_3_1 \
-  (int16_t)0x041F /* gas32CoeffFor4SBs[11 et 29] = 0x041EEE40 */
-#define WIND_4_SUBBANDS_3_2 \
-  (int16_t)0x2413 /* gas32CoeffFor4SBs[19 et 21] = 0x2412F251 */
-#define WIND_4_SUBBANDS_3_3 \
-  (int16_t)0x00C9 /* gas32CoeffFor4SBs[13 et 27] = 0x00C8F2BC */
-#define WIND_4_SUBBANDS_3_4 \
-  (int16_t)0x0080 /* gas32CoeffFor4SBs[5 et 35] = 0x007F88E4 */
-#define WIND_4_SUBBANDS_4_0 \
-  (int16_t)0x007E /* gas32CoeffFor4SBs[4 et 36] = 0x007DBCC8 */
-#define WIND_4_SUBBANDS_4_1 \
-  (int16_t)0x0350 /* gas32CoeffFor4SBs[12 et 28] = 0x034FEE2C */
-#define WIND_4_SUBBANDS_4_2 \
-  (int16_t)0x25AC /* gas32CoeffFor4SBs[20] = 25AC1FF2 */
+#define WIND_4_SUBBANDS_0_2                                                                     \
+  (int16_t)0x115B                           /* gas32CoeffFor4SBs[16] = -gas32CoeffFor4SBs[24] = \
+                                               0x115B1ED2 */
+#define WIND_4_SUBBANDS_1_0 (int16_t)0x0012 /* gas32CoeffFor4SBs[1 et 39] = 0x001194E6 */
+#define WIND_4_SUBBANDS_1_1 (int16_t)0x029E /* gas32CoeffFor4SBs[9 et 31] = 0x029DBAA3 */
+#define WIND_4_SUBBANDS_1_2 (int16_t)0x18F5 /* gas32CoeffFor4SBs[17 et 23] = 0x18F55C90 */
+#define WIND_4_SUBBANDS_1_3 (int16_t)0xF610 /* gas32CoeffFor4SBs[15 et 25] = 0xF60FAF37 */
+#define WIND_4_SUBBANDS_1_4 (int16_t)0xFF9C /* gas32CoeffFor4SBs[7 et 33] = 0xFF9BB9D5 */
+#define WIND_4_SUBBANDS_2_0 (int16_t)0x0031 /* gas32CoeffFor4SBs[2 et 38] = 0x0030E2D3 */
+#define WIND_4_SUBBANDS_2_1 (int16_t)0x03B2 /* gas32CoeffFor4SBs[10 et 30] = 0x03B23341 */
+#define WIND_4_SUBBANDS_2_2 (int16_t)0x1F91 /* gas32CoeffFor4SBs[18 et 22] = 0x1F91CA46 */
+#define WIND_4_SUBBANDS_2_3 (int16_t)0xFC50 /* gas32CoeffFor4SBs[14 et 26] = 0xFC4F91D4 */
+#define WIND_4_SUBBANDS_2_4 (int16_t)0x003D /* gas32CoeffFor4SBs[6 et 34] = 0x003D239B */
+#define WIND_4_SUBBANDS_3_0 (int16_t)0x005A /* gas32CoeffFor4SBs[3 et 37] = 0x00599403 */
+#define WIND_4_SUBBANDS_3_1 (int16_t)0x041F /* gas32CoeffFor4SBs[11 et 29] = 0x041EEE40 */
+#define WIND_4_SUBBANDS_3_2 (int16_t)0x2413 /* gas32CoeffFor4SBs[19 et 21] = 0x2412F251 */
+#define WIND_4_SUBBANDS_3_3 (int16_t)0x00C9 /* gas32CoeffFor4SBs[13 et 27] = 0x00C8F2BC */
+#define WIND_4_SUBBANDS_3_4 (int16_t)0x0080 /* gas32CoeffFor4SBs[5 et 35] = 0x007F88E4 */
+#define WIND_4_SUBBANDS_4_0 (int16_t)0x007E /* gas32CoeffFor4SBs[4 et 36] = 0x007DBCC8 */
+#define WIND_4_SUBBANDS_4_1 (int16_t)0x0350 /* gas32CoeffFor4SBs[12 et 28] = 0x034FEE2C */
+#define WIND_4_SUBBANDS_4_2 (int16_t)0x25AC /* gas32CoeffFor4SBs[20] = 25AC1FF2 */
 
 #define WIND_8_SUBBANDS_0_1 (int16_t)0x00B9 /* 16 0x12CF6C75 */
 #define WIND_8_SUBBANDS_0_2 (int16_t)0x08B4 /* 32 0x08B4307A */
@@ -202,8 +167,7 @@
 #endif
 static int32_t s32DCTY[16] = {0};
 static int32_t s32X[ENC_VX_BUFFER_SIZE / 2];
-static int16_t* s16X =
-    (int16_t*)s32X; /* s16X must be 32 bits aligned cf  SHIFTUP_X8_2*/
+static int16_t* s16X = (int16_t*)s32X; /* s16X must be 32 bits aligned cf  SHIFTUP_X8_2*/
 #if (SBC_USE_ARM_PRAGMA == TRUE)
 #pragma arm section zidata
 #endif
@@ -275,16 +239,16 @@ static int16_t* s16X =
   }
 
 #if (SBC_ARM_ASM_OPT == TRUE)
-#define WINDOW_ACCU_8_0                                                                                                                                                                                      \
-  {                                                                                                                                                                                                          \
+#define WINDOW_ACCU_8_0 \
+  {                     \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_0_1,(s16X[ChOffset+16]-s16X[ChOffset+64]);\
         MLA s32Hi,WIND_8_SUBBANDS_0_2,(s16X[ChOffset+32]-s16X[ChOffset+48]),s32Hi;\
-        MOV s32DCTY[0],s32Hi; \
-    }                                                                                                                                                                                                        \
+        MOV s32DCTY[0],s32Hi;            \
+    }                   \
   }
-#define WINDOW_ACCU_8_1_15                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
+#define WINDOW_ACCU_8_1_15 \
+  {                        \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_1_0,s16X[ChOffset+1];\
         MUL s32Hi2,WIND_8_SUBBANDS_1_0,s16X[ChOffset+64+15];\
@@ -297,11 +261,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_1_4,s16X[ChOffset+64+1],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_1_4,s16X[ChOffset+15],s32Hi2;\
         MOV s32DCTY[1],s32Hi;\
-        MOV s32DCTY[15],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+        MOV s32DCTY[15],s32Hi2;               \
+    }                      \
   }
-#define WINDOW_ACCU_8_2_14                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
+#define WINDOW_ACCU_8_2_14 \
+  {                        \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_2_0,s16X[ChOffset+2];\
         MUL s32Hi2,WIND_8_SUBBANDS_2_0,s16X[ChOffset+64+14];\
@@ -314,11 +278,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_2_4,s16X[ChOffset+64+2],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_2_4,s16X[ChOffset+14],s32Hi2;\
         MOV s32DCTY[2],s32Hi;\
-        MOV s32DCTY[14],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+        MOV s32DCTY[14],s32Hi2;               \
+    }                      \
   }
-#define WINDOW_ACCU_8_3_13                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
+#define WINDOW_ACCU_8_3_13 \
+  {                        \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_3_0,s16X[ChOffset+3];\
         MUL s32Hi2,WIND_8_SUBBANDS_3_0,s16X[ChOffset+64+13];\
@@ -331,11 +295,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_3_4,s16X[ChOffset+64+3],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_3_4,s16X[ChOffset+13],s32Hi2;\
         MOV s32DCTY[3],s32Hi;\
-        MOV s32DCTY[13],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+        MOV s32DCTY[13],s32Hi2;               \
+    }                      \
   }
-#define WINDOW_ACCU_8_4_12                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
+#define WINDOW_ACCU_8_4_12 \
+  {                        \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_4_0,s16X[ChOffset+4];\
         MUL s32Hi2,WIND_8_SUBBANDS_4_0,s16X[ChOffset+64+12];\
@@ -348,11 +312,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_4_4,s16X[ChOffset+64+4],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_4_4,s16X[ChOffset+12],s32Hi2;\
         MOV s32DCTY[4],s32Hi;\
-        MOV s32DCTY[12],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+        MOV s32DCTY[12],s32Hi2;               \
+    }                      \
   }
-#define WINDOW_ACCU_8_5_11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
+#define WINDOW_ACCU_8_5_11 \
+  {                        \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_5_0,s16X[ChOffset+5];\
         MUL s32Hi2,WIND_8_SUBBANDS_5_0,s16X[ChOffset+64+11];\
@@ -365,11 +329,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_5_4,s16X[ChOffset+64+5],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_5_4,s16X[ChOffset+11],s32Hi2;\
         MOV s32DCTY[5],s32Hi;\
-        MOV s32DCTY[11],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+        MOV s32DCTY[11],s32Hi2;               \
+    }                      \
   }
-#define WINDOW_ACCU_8_6_10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \
+#define WINDOW_ACCU_8_6_10 \
+  {                        \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_6_0,s16X[ChOffset+6];\
         MUL s32Hi2,WIND_8_SUBBANDS_6_0,s16X[ChOffset+64+10];\
@@ -382,11 +346,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_6_4,s16X[ChOffset+64+6],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_6_4,s16X[ChOffset+10],s32Hi2;\
         MOV s32DCTY[6],s32Hi;\
-        MOV s32DCTY[10],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+        MOV s32DCTY[10],s32Hi2;               \
+    }                      \
   }
-#define WINDOW_ACCU_8_7_9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \
+#define WINDOW_ACCU_8_7_9 \
+  {                       \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_7_0,s16X[ChOffset+7];\
         MUL s32Hi2,WIND_8_SUBBANDS_7_0,s16X[ChOffset+64+9];\
@@ -399,28 +363,28 @@ static int16_t* s16X =
         MLA s32Hi,WIND_8_SUBBANDS_7_4,s16X[ChOffset+64+7],s32Hi;\
         MLA s32Hi2,WIND_8_SUBBANDS_7_4,s16X[ChOffset+9],s32Hi2;\
         MOV s32DCTY[7],s32Hi;\
-        MOV s32DCTY[9],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 \
+        MOV s32DCTY[9],s32Hi2;              \
+    }                     \
   }
-#define WINDOW_ACCU_8_8                                                                                                                                                                                                                                                             \
-  {                                                                                                                                                                                                                                                                                 \
+#define WINDOW_ACCU_8_8 \
+  {                     \
     __asm {\
         MUL s32Hi,WIND_8_SUBBANDS_8_0,(s16X[ChOffset+8]+s16X[ChOffset+8+64]);\
         MLA s32Hi,WIND_8_SUBBANDS_8_1,(s16X[ChOffset+8+16]+s16X[ChOffset+8+64]),s32Hi;\
         MLA s32Hi,WIND_8_SUBBANDS_8_2,s16X[ChOffset+8+32],s32Hi;\
-        MOV s32DCTY[8],s32Hi; \
-    }                                                                                                                                                                                                                                                                               \
+        MOV s32DCTY[8],s32Hi;            \
+    }                   \
   }
-#define WINDOW_ACCU_4_0                                                                                                                                                                                     \
-  {                                                                                                                                                                                                         \
+#define WINDOW_ACCU_4_0 \
+  {                     \
     __asm {\
         MUL s32Hi,WIND_4_SUBBANDS_0_1,(s16X[ChOffset+8]-s16X[ChOffset+32]);\
         MLA s32Hi,WIND_4_SUBBANDS_0_2,(s16X[ChOffset+16]-s16X[ChOffset+24]),s32Hi;\
-        MOV s32DCTY[0],s32Hi; \
-    }                                                                                                                                                                                                       \
+        MOV s32DCTY[0],s32Hi;            \
+    }                   \
   }
-#define WINDOW_ACCU_4_1_7                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 \
+#define WINDOW_ACCU_4_1_7 \
+  {                       \
     __asm {\
         MUL s32Hi,WIND_4_SUBBANDS_1_0,s16X[ChOffset+1];\
         MUL s32Hi2,WIND_4_SUBBANDS_1_0,s16X[ChOffset+32+7];\
@@ -433,11 +397,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_4_SUBBANDS_1_4,s16X[ChOffset+32+1],s32Hi;\
         MLA s32Hi2,WIND_4_SUBBANDS_1_4,s16X[ChOffset+7],s32Hi2;\
         MOV s32DCTY[1],s32Hi;\
-        MOV s32DCTY[7],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               \
+        MOV s32DCTY[7],s32Hi2;              \
+    }                     \
   }
-#define WINDOW_ACCU_4_2_6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 \
+#define WINDOW_ACCU_4_2_6 \
+  {                       \
     __asm {\
         MUL s32Hi,WIND_4_SUBBANDS_2_0,s16X[ChOffset+2];\
         MUL s32Hi2,WIND_4_SUBBANDS_2_0,s16X[ChOffset+32+6];\
@@ -450,11 +414,11 @@ static int16_t* s16X =
         MLA s32Hi,WIND_4_SUBBANDS_2_4,s16X[ChOffset+32+2],s32Hi;\
         MLA s32Hi2,WIND_4_SUBBANDS_2_4,s16X[ChOffset+6],s32Hi2;\
         MOV s32DCTY[2],s32Hi;\
-        MOV s32DCTY[6],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               \
+        MOV s32DCTY[6],s32Hi2;              \
+    }                     \
   }
-#define WINDOW_ACCU_4_3_5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
-  {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 \
+#define WINDOW_ACCU_4_3_5 \
+  {                       \
     __asm {\
         MUL s32Hi,WIND_4_SUBBANDS_3_0,s16X[ChOffset+3];\
         MUL s32Hi2,WIND_4_SUBBANDS_3_0,s16X[ChOffset+32+5];\
@@ -467,17 +431,17 @@ static int16_t* s16X =
         MLA s32Hi,WIND_4_SUBBANDS_3_4,s16X[ChOffset+32+3],s32Hi;\
         MLA s32Hi2,WIND_4_SUBBANDS_3_4,s16X[ChOffset+5],s32Hi2;\
         MOV s32DCTY[3],s32Hi;\
-        MOV s32DCTY[5],s32Hi2; \
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               \
+        MOV s32DCTY[5],s32Hi2;              \
+    }                     \
   }
-#define WINDOW_ACCU_4_4                                                                                                                                                                                                                                                            \
-  {                                                                                                                                                                                                                                                                                \
+#define WINDOW_ACCU_4_4 \
+  {                     \
     __asm {\
         MUL s32Hi,WIND_4_SUBBANDS_4_0,(s16X[ChOffset+4]+s16X[ChOffset+4+32]);\
         MLA s32Hi,WIND_4_SUBBANDS_4_1,(s16X[ChOffset+4+8]+s16X[ChOffset+4+24]),s32Hi;\
         MLA s32Hi,WIND_4_SUBBANDS_4_2,s16X[ChOffset+4+16],s32Hi;\
-        MOV s32DCTY[4],s32Hi; \
-    }                                                                                                                                                                                                                                                                              \
+        MOV s32DCTY[4],s32Hi;            \
+    }                   \
   }
 
 #define WINDOW_PARTIAL_4 \
@@ -506,534 +470,372 @@ static int16_t* s16X =
 #if (SBC_IPAQ_OPT == TRUE)
 
 #if (SBC_IS_64_MULT_IN_WINDOW_ACCU == TRUE)
-#define WINDOW_ACCU_8_0                                              \
-  {                                                                  \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_0_1 *                         \
-              (int64_t)(s16X[ChOffset + 16] - s16X[ChOffset + 64]);  \
-    s64Temp += (int64_t)WIND_8_SUBBANDS_0_2 *                        \
-               (int64_t)(s16X[ChOffset + 32] - s16X[ChOffset + 48]); \
-    s32DCTY[0] = (int32_t)(s64Temp >> 16);                           \
+#define WINDOW_ACCU_8_0                                                                            \
+  {                                                                                                \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_0_1 * (int64_t)(s16X[ChOffset + 16] - s16X[ChOffset + 64]); \
+    s64Temp +=                                                                                     \
+            (int64_t)WIND_8_SUBBANDS_0_2 * (int64_t)(s16X[ChOffset + 32] - s16X[ChOffset + 48]);   \
+    s32DCTY[0] = (int32_t)(s64Temp >> 16);                                                         \
   }
-#define WINDOW_ACCU_8_1_15                                                   \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 1];    \
-    s64Temp2 =                                                               \
-        (int64_t)WIND_8_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 64 + 15];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 16 + 1];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 48 + 15];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 32 + 1];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 32 + 15];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 48 + 1];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 16 + 15];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 64 + 1];     \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 15]; \
-    s32DCTY[1] = (int32_t)(s64Temp >> 16);                                   \
-    s32DCTY[15] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_1_15                                                        \
+  {                                                                               \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 1];         \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 64 + 15];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 16 + 1];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 48 + 15]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 32 + 1];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 32 + 15]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 48 + 1];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 16 + 15]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 64 + 1];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 15];      \
+    s32DCTY[1] = (int32_t)(s64Temp >> 16);                                        \
+    s32DCTY[15] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_2_14                                                   \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 2];    \
-    s64Temp2 =                                                               \
-        (int64_t)WIND_8_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 64 + 14];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 16 + 2];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 48 + 14];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 32 + 2];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 32 + 14];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 48 + 2];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 16 + 14];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 64 + 2];     \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 14]; \
-    s32DCTY[2] = (int32_t)(s64Temp >> 16);                                   \
-    s32DCTY[14] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_2_14                                                        \
+  {                                                                               \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 2];         \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 64 + 14];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 16 + 2];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 48 + 14]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 32 + 2];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 32 + 14]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 48 + 2];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 16 + 14]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 64 + 2];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 14];      \
+    s32DCTY[2] = (int32_t)(s64Temp >> 16);                                        \
+    s32DCTY[14] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_3_13                                                   \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 3];    \
-    s64Temp2 =                                                               \
-        (int64_t)WIND_8_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 64 + 13];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 16 + 3];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 48 + 13];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 32 + 3];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 32 + 13];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 48 + 3];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 16 + 13];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 64 + 3];     \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 13]; \
-    s32DCTY[3] = (int32_t)(s64Temp >> 16);                                   \
-    s32DCTY[13] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_3_13                                                        \
+  {                                                                               \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 3];         \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 64 + 13];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 16 + 3];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 48 + 13]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 32 + 3];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 32 + 13]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 48 + 3];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 16 + 13]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 64 + 3];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 13];      \
+    s32DCTY[3] = (int32_t)(s64Temp >> 16);                                        \
+    s32DCTY[13] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_4_12                                                   \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_4_0 * (int64_t)s16X[ChOffset + 4];    \
-    s64Temp2 =                                                               \
-        (int64_t)WIND_8_SUBBANDS_4_0 * (int64_t)s16X[ChOffset + 64 + 12];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_4_1 * (int64_t)s16X[ChOffset + 16 + 4];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_4_1 * (int64_t)s16X[ChOffset + 48 + 12];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_4_2 * (int64_t)s16X[ChOffset + 32 + 4];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_4_2 * (int64_t)s16X[ChOffset + 32 + 12];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_4_3 * (int64_t)s16X[ChOffset + 48 + 4];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_4_3 * (int64_t)s16X[ChOffset + 16 + 12];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_4_4 * (int64_t)s16X[ChOffset + 64 + 4];     \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_4_4 * (int64_t)s16X[ChOffset + 12]; \
-    s32DCTY[4] = (int32_t)(s64Temp >> 16);                                   \
-    s32DCTY[12] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_4_12                                                        \
+  {                                                                               \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_4_0 * (int64_t)s16X[ChOffset + 4];         \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_4_0 * (int64_t)s16X[ChOffset + 64 + 12];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_4_1 * (int64_t)s16X[ChOffset + 16 + 4];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_4_1 * (int64_t)s16X[ChOffset + 48 + 12]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_4_2 * (int64_t)s16X[ChOffset + 32 + 4];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_4_2 * (int64_t)s16X[ChOffset + 32 + 12]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_4_3 * (int64_t)s16X[ChOffset + 48 + 4];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_4_3 * (int64_t)s16X[ChOffset + 16 + 12]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_4_4 * (int64_t)s16X[ChOffset + 64 + 4];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_4_4 * (int64_t)s16X[ChOffset + 12];      \
+    s32DCTY[4] = (int32_t)(s64Temp >> 16);                                        \
+    s32DCTY[12] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_5_11                                                   \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_5_0 * (int64_t)s16X[ChOffset + 5];    \
-    s64Temp2 =                                                               \
-        (int64_t)WIND_8_SUBBANDS_5_0 * (int64_t)s16X[ChOffset + 64 + 11];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_5_1 * (int64_t)s16X[ChOffset + 16 + 5];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_5_1 * (int64_t)s16X[ChOffset + 48 + 11];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_5_2 * (int64_t)s16X[ChOffset + 32 + 5];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_5_2 * (int64_t)s16X[ChOffset + 32 + 11];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_5_3 * (int64_t)s16X[ChOffset + 48 + 5];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_5_3 * (int64_t)s16X[ChOffset + 16 + 11];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_5_4 * (int64_t)s16X[ChOffset + 64 + 5];     \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_5_4 * (int64_t)s16X[ChOffset + 11]; \
-    s32DCTY[5] = (int32_t)(s64Temp >> 16);                                   \
-    s32DCTY[11] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_5_11                                                        \
+  {                                                                               \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_5_0 * (int64_t)s16X[ChOffset + 5];         \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_5_0 * (int64_t)s16X[ChOffset + 64 + 11];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_5_1 * (int64_t)s16X[ChOffset + 16 + 5];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_5_1 * (int64_t)s16X[ChOffset + 48 + 11]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_5_2 * (int64_t)s16X[ChOffset + 32 + 5];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_5_2 * (int64_t)s16X[ChOffset + 32 + 11]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_5_3 * (int64_t)s16X[ChOffset + 48 + 5];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_5_3 * (int64_t)s16X[ChOffset + 16 + 11]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_5_4 * (int64_t)s16X[ChOffset + 64 + 5];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_5_4 * (int64_t)s16X[ChOffset + 11];      \
+    s32DCTY[5] = (int32_t)(s64Temp >> 16);                                        \
+    s32DCTY[11] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_6_10                                                   \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_6_0 * (int64_t)s16X[ChOffset + 6];    \
-    s64Temp2 =                                                               \
-        (int64_t)WIND_8_SUBBANDS_6_0 * (int64_t)s16X[ChOffset + 64 + 10];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_6_1 * (int64_t)s16X[ChOffset + 16 + 6];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_6_1 * (int64_t)s16X[ChOffset + 48 + 10];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_6_2 * (int64_t)s16X[ChOffset + 32 + 6];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_6_2 * (int64_t)s16X[ChOffset + 32 + 10];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_6_3 * (int64_t)s16X[ChOffset + 48 + 6];     \
-    s64Temp2 +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_6_3 * (int64_t)s16X[ChOffset + 16 + 10];    \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_6_4 * (int64_t)s16X[ChOffset + 64 + 6];     \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_6_4 * (int64_t)s16X[ChOffset + 10]; \
-    s32DCTY[6] = (int32_t)(s64Temp >> 16);                                   \
-    s32DCTY[10] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_6_10                                                        \
+  {                                                                               \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_6_0 * (int64_t)s16X[ChOffset + 6];         \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_6_0 * (int64_t)s16X[ChOffset + 64 + 10];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_6_1 * (int64_t)s16X[ChOffset + 16 + 6];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_6_1 * (int64_t)s16X[ChOffset + 48 + 10]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_6_2 * (int64_t)s16X[ChOffset + 32 + 6];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_6_2 * (int64_t)s16X[ChOffset + 32 + 10]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_6_3 * (int64_t)s16X[ChOffset + 48 + 6];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_6_3 * (int64_t)s16X[ChOffset + 16 + 10]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_6_4 * (int64_t)s16X[ChOffset + 64 + 6];   \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_6_4 * (int64_t)s16X[ChOffset + 10];      \
+    s32DCTY[6] = (int32_t)(s64Temp >> 16);                                        \
+    s32DCTY[10] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_7_9                                                   \
-  {                                                                         \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_7_0 * (int64_t)s16X[ChOffset + 7];   \
-    s64Temp2 =                                                              \
-        (int64_t)WIND_8_SUBBANDS_7_0 * (int64_t)s16X[ChOffset + 64 + 9];    \
-    s64Temp +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_7_1 * (int64_t)s16X[ChOffset + 16 + 7];    \
-    s64Temp2 +=                                                             \
-        (int64_t)WIND_8_SUBBANDS_7_1 * (int64_t)s16X[ChOffset + 48 + 9];    \
-    s64Temp +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_7_2 * (int64_t)s16X[ChOffset + 32 + 7];    \
-    s64Temp2 +=                                                             \
-        (int64_t)WIND_8_SUBBANDS_7_2 * (int64_t)s16X[ChOffset + 32 + 9];    \
-    s64Temp +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_7_3 * (int64_t)s16X[ChOffset + 48 + 7];    \
-    s64Temp2 +=                                                             \
-        (int64_t)WIND_8_SUBBANDS_7_3 * (int64_t)s16X[ChOffset + 16 + 9];    \
-    s64Temp +=                                                              \
-        (int64_t)WIND_8_SUBBANDS_7_4 * (int64_t)s16X[ChOffset + 64 + 7];    \
-    s64Temp2 += (int64_t)WIND_8_SUBBANDS_7_4 * (int64_t)s16X[ChOffset + 9]; \
-    s32DCTY[7] = (int32_t)(s64Temp >> 16);                                  \
-    s32DCTY[9] = (int32_t)(s64Temp2 >> 16);                                 \
+#define WINDOW_ACCU_8_7_9                                                        \
+  {                                                                              \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_7_0 * (int64_t)s16X[ChOffset + 7];        \
+    s64Temp2 = (int64_t)WIND_8_SUBBANDS_7_0 * (int64_t)s16X[ChOffset + 64 + 9];  \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_7_1 * (int64_t)s16X[ChOffset + 16 + 7];  \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_7_1 * (int64_t)s16X[ChOffset + 48 + 9]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_7_2 * (int64_t)s16X[ChOffset + 32 + 7];  \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_7_2 * (int64_t)s16X[ChOffset + 32 + 9]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_7_3 * (int64_t)s16X[ChOffset + 48 + 7];  \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_7_3 * (int64_t)s16X[ChOffset + 16 + 9]; \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_7_4 * (int64_t)s16X[ChOffset + 64 + 7];  \
+    s64Temp2 += (int64_t)WIND_8_SUBBANDS_7_4 * (int64_t)s16X[ChOffset + 9];      \
+    s32DCTY[7] = (int32_t)(s64Temp >> 16);                                       \
+    s32DCTY[9] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_8_8                                                      \
-  {                                                                          \
-    s64Temp = (int64_t)WIND_8_SUBBANDS_8_0 *                                 \
-              (int64_t)(s16X[ChOffset + 8] + s16X[ChOffset + 64 + 8]);       \
-    s64Temp += (int64_t)WIND_8_SUBBANDS_8_1 *                                \
-               (int64_t)(s16X[ChOffset + 16 + 8] + s16X[ChOffset + 48 + 8]); \
-    s64Temp +=                                                               \
-        (int64_t)WIND_8_SUBBANDS_8_2 * (int64_t)s16X[ChOffset + 32 + 8];     \
-    s32DCTY[8] = (int32_t)(s64Temp >> 16);                                   \
+#define WINDOW_ACCU_8_8                                                         \
+  {                                                                             \
+    s64Temp = (int64_t)WIND_8_SUBBANDS_8_0 *                                    \
+              (int64_t)(s16X[ChOffset + 8] + s16X[ChOffset + 64 + 8]);          \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_8_1 *                                   \
+               (int64_t)(s16X[ChOffset + 16 + 8] + s16X[ChOffset + 48 + 8]);    \
+    s64Temp += (int64_t)WIND_8_SUBBANDS_8_2 * (int64_t)s16X[ChOffset + 32 + 8]; \
+    s32DCTY[8] = (int32_t)(s64Temp >> 16);                                      \
   }
-#define WINDOW_ACCU_4_0                                              \
-  {                                                                  \
-    s64Temp = (int64_t)WIND_4_SUBBANDS_0_1 *                         \
-              (int64_t)(s16X[ChOffset + 8] - s16X[ChOffset + 32]);   \
-    s64Temp += (int64_t)WIND_4_SUBBANDS_0_2 *                        \
-               (int64_t)(s16X[ChOffset + 16] - s16X[ChOffset + 24]); \
-    s32DCTY[0] = (int32_t)(s64Temp >> 16);                           \
+#define WINDOW_ACCU_4_0                                                                           \
+  {                                                                                               \
+    s64Temp = (int64_t)WIND_4_SUBBANDS_0_1 * (int64_t)(s16X[ChOffset + 8] - s16X[ChOffset + 32]); \
+    s64Temp +=                                                                                    \
+            (int64_t)WIND_4_SUBBANDS_0_2 * (int64_t)(s16X[ChOffset + 16] - s16X[ChOffset + 24]);  \
+    s32DCTY[0] = (int32_t)(s64Temp >> 16);                                                        \
   }
-#define WINDOW_ACCU_4_1_7                                                      \
-  {                                                                            \
-    s64Temp = (int64_t)WIND_4_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 1];      \
-    s64Temp2 =                                                                 \
-        (int64_t)WIND_4_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 32 + 7];       \
-    s64Temp += (int64_t)WIND_4_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 8 + 1]; \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 24 + 7];       \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 16 + 1];       \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 16 + 7];       \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 24 + 1];       \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 8 + 7];        \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 32 + 1];       \
-    s64Temp2 += (int64_t)WIND_4_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 7];    \
-    s32DCTY[1] = (int32_t)(s64Temp >> 16);                                     \
-    s32DCTY[7] = (int32_t)(s64Temp2 >> 16);                                    \
+#define WINDOW_ACCU_4_1_7                                                        \
+  {                                                                              \
+    s64Temp = (int64_t)WIND_4_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 1];        \
+    s64Temp2 = (int64_t)WIND_4_SUBBANDS_1_0 * (int64_t)s16X[ChOffset + 32 + 7];  \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 8 + 1];   \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_1_1 * (int64_t)s16X[ChOffset + 24 + 7]; \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 16 + 1];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_1_2 * (int64_t)s16X[ChOffset + 16 + 7]; \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 24 + 1];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_1_3 * (int64_t)s16X[ChOffset + 8 + 7];  \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 32 + 1];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_1_4 * (int64_t)s16X[ChOffset + 7];      \
+    s32DCTY[1] = (int32_t)(s64Temp >> 16);                                       \
+    s32DCTY[7] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_4_2_6                                                      \
-  {                                                                            \
-    s64Temp = (int64_t)WIND_4_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 2];      \
-    s64Temp2 =                                                                 \
-        (int64_t)WIND_4_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 32 + 6];       \
-    s64Temp += (int64_t)WIND_4_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 8 + 2]; \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 24 + 6];       \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 16 + 2];       \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 16 + 6];       \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 24 + 2];       \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 8 + 6];        \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 32 + 2];       \
-    s64Temp2 += (int64_t)WIND_4_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 6];    \
-    s32DCTY[2] = (int32_t)(s64Temp >> 16);                                     \
-    s32DCTY[6] = (int32_t)(s64Temp2 >> 16);                                    \
+#define WINDOW_ACCU_4_2_6                                                        \
+  {                                                                              \
+    s64Temp = (int64_t)WIND_4_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 2];        \
+    s64Temp2 = (int64_t)WIND_4_SUBBANDS_2_0 * (int64_t)s16X[ChOffset + 32 + 6];  \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 8 + 2];   \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_2_1 * (int64_t)s16X[ChOffset + 24 + 6]; \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 16 + 2];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_2_2 * (int64_t)s16X[ChOffset + 16 + 6]; \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 24 + 2];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_2_3 * (int64_t)s16X[ChOffset + 8 + 6];  \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 32 + 2];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_2_4 * (int64_t)s16X[ChOffset + 6];      \
+    s32DCTY[2] = (int32_t)(s64Temp >> 16);                                       \
+    s32DCTY[6] = (int32_t)(s64Temp2 >> 16);                                      \
   }
-#define WINDOW_ACCU_4_3_5                                                      \
-  {                                                                            \
-    s64Temp = (int64_t)WIND_4_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 3];      \
-    s64Temp2 =                                                                 \
-        (int64_t)WIND_4_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 32 + 5];       \
-    s64Temp += (int64_t)WIND_4_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 8 + 3]; \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 24 + 5];       \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 16 + 3];       \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 16 + 5];       \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 24 + 3];       \
-    s64Temp2 +=                                                                \
-        (int64_t)WIND_4_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 8 + 5];        \
-    s64Temp +=                                                                 \
-        (int64_t)WIND_4_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 32 + 3];       \
-    s64Temp2 += (int64_t)WIND_4_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 5];    \
-    s32DCTY[3] = (int32_t)(s64Temp >> 16);                                     \
-    s32DCTY[5] = (int32_t)(s64Temp2 >> 16);                                    \
+#define WINDOW_ACCU_4_3_5                                                        \
+  {                                                                              \
+    s64Temp = (int64_t)WIND_4_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 3];        \
+    s64Temp2 = (int64_t)WIND_4_SUBBANDS_3_0 * (int64_t)s16X[ChOffset + 32 + 5];  \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 8 + 3];   \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_3_1 * (int64_t)s16X[ChOffset + 24 + 5]; \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 16 + 3];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_3_2 * (int64_t)s16X[ChOffset + 16 + 5]; \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 24 + 3];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_3_3 * (int64_t)s16X[ChOffset + 8 + 5];  \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 32 + 3];  \
+    s64Temp2 += (int64_t)WIND_4_SUBBANDS_3_4 * (int64_t)s16X[ChOffset + 5];      \
+    s32DCTY[3] = (int32_t)(s64Temp >> 16);                                       \
+    s32DCTY[5] = (int32_t)(s64Temp2 >> 16);                                      \
   }
 
-#define WINDOW_ACCU_4_4                                                     \
-  {                                                                         \
-    s64Temp = (int64_t)WIND_4_SUBBANDS_4_0 *                                \
-              (int64_t)(s16X[ChOffset + 4] + s16X[ChOffset + 4 + 32]);      \
-    s64Temp += (int64_t)WIND_4_SUBBANDS_4_1 *                               \
-               (int64_t)(s16X[ChOffset + 4 + 8] + s16X[ChOffset + 4 + 24]); \
-    s64Temp +=                                                              \
-        (int64_t)WIND_4_SUBBANDS_4_2 * (int64_t)s16X[ChOffset + 4 + 16];    \
-    s32DCTY[4] = (int32_t)(s64Temp >> 16);                                  \
+#define WINDOW_ACCU_4_4                                                         \
+  {                                                                             \
+    s64Temp = (int64_t)WIND_4_SUBBANDS_4_0 *                                    \
+              (int64_t)(s16X[ChOffset + 4] + s16X[ChOffset + 4 + 32]);          \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_4_1 *                                   \
+               (int64_t)(s16X[ChOffset + 4 + 8] + s16X[ChOffset + 4 + 24]);     \
+    s64Temp += (int64_t)WIND_4_SUBBANDS_4_2 * (int64_t)s16X[ChOffset + 4 + 16]; \
+    s32DCTY[4] = (int32_t)(s64Temp >> 16);                                      \
   }
 #else /* SBC_IS_64_MULT_IN_WINDOW_ACCU == FALSE */
-#define WINDOW_ACCU_8_0                                              \
-  {                                                                  \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_0_1 *                         \
-              (int32_t)(s16X[ChOffset + 16] - s16X[ChOffset + 64]);  \
-    s32Temp += (int32_t)WIND_8_SUBBANDS_0_2 *                        \
-               (int32_t)(s16X[ChOffset + 32] - s16X[ChOffset + 48]); \
-    s32DCTY[0] = (int32_t)s32Temp;                                   \
+#define WINDOW_ACCU_8_0                                                                            \
+  {                                                                                                \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_0_1 * (int32_t)(s16X[ChOffset + 16] - s16X[ChOffset + 64]); \
+    s32Temp +=                                                                                     \
+            (int32_t)WIND_8_SUBBANDS_0_2 * (int32_t)(s16X[ChOffset + 32] - s16X[ChOffset + 48]);   \
+    s32DCTY[0] = (int32_t)s32Temp;                                                                 \
   }
-#define WINDOW_ACCU_8_1_15                                                   \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 1];    \
-    s32Temp2 =                                                               \
-        (int32_t)WIND_8_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 64 + 15];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 16 + 1];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 48 + 15];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 32 + 1];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 32 + 15];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 48 + 1];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 16 + 15];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 64 + 1];     \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 15]; \
-    s32DCTY[1] = (int32_t)s32Temp;                                           \
-    s32DCTY[15] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_1_15                                                        \
+  {                                                                               \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 1];         \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 64 + 15];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 16 + 1];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 48 + 15]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 32 + 1];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 32 + 15]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 48 + 1];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 16 + 15]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 64 + 1];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 15];      \
+    s32DCTY[1] = (int32_t)s32Temp;                                                \
+    s32DCTY[15] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_2_14                                                   \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 2];    \
-    s32Temp2 =                                                               \
-        (int32_t)WIND_8_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 64 + 14];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 16 + 2];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 48 + 14];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 32 + 2];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 32 + 14];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 48 + 2];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 16 + 14];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 64 + 2];     \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 14]; \
-    s32DCTY[2] = (int32_t)s32Temp;                                           \
-    s32DCTY[14] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_2_14                                                        \
+  {                                                                               \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 2];         \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 64 + 14];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 16 + 2];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 48 + 14]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 32 + 2];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 32 + 14]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 48 + 2];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 16 + 14]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 64 + 2];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 14];      \
+    s32DCTY[2] = (int32_t)s32Temp;                                                \
+    s32DCTY[14] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_3_13                                                   \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 3];    \
-    s32Temp2 =                                                               \
-        (int32_t)WIND_8_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 64 + 13];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 16 + 3];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 48 + 13];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 32 + 3];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 32 + 13];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 48 + 3];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 16 + 13];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 64 + 3];     \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 13]; \
-    s32DCTY[3] = (int32_t)s32Temp;                                           \
-    s32DCTY[13] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_3_13                                                        \
+  {                                                                               \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 3];         \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 64 + 13];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 16 + 3];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 48 + 13]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 32 + 3];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 32 + 13]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 48 + 3];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 16 + 13]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 64 + 3];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 13];      \
+    s32DCTY[3] = (int32_t)s32Temp;                                                \
+    s32DCTY[13] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_4_12                                                   \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_4_0 * (int32_t)s16X[ChOffset + 4];    \
-    s32Temp2 =                                                               \
-        (int32_t)WIND_8_SUBBANDS_4_0 * (int32_t)s16X[ChOffset + 64 + 12];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_4_1 * (int32_t)s16X[ChOffset + 16 + 4];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_4_1 * (int32_t)s16X[ChOffset + 48 + 12];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_4_2 * (int32_t)s16X[ChOffset + 32 + 4];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_4_2 * (int32_t)s16X[ChOffset + 32 + 12];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_4_3 * (int32_t)s16X[ChOffset + 48 + 4];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_4_3 * (int32_t)s16X[ChOffset + 16 + 12];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_4_4 * (int32_t)s16X[ChOffset + 64 + 4];     \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_4_4 * (int32_t)s16X[ChOffset + 12]; \
-    s32DCTY[4] = (int32_t)s32Temp;                                           \
-    s32DCTY[12] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_4_12                                                        \
+  {                                                                               \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_4_0 * (int32_t)s16X[ChOffset + 4];         \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_4_0 * (int32_t)s16X[ChOffset + 64 + 12];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_4_1 * (int32_t)s16X[ChOffset + 16 + 4];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_4_1 * (int32_t)s16X[ChOffset + 48 + 12]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_4_2 * (int32_t)s16X[ChOffset + 32 + 4];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_4_2 * (int32_t)s16X[ChOffset + 32 + 12]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_4_3 * (int32_t)s16X[ChOffset + 48 + 4];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_4_3 * (int32_t)s16X[ChOffset + 16 + 12]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_4_4 * (int32_t)s16X[ChOffset + 64 + 4];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_4_4 * (int32_t)s16X[ChOffset + 12];      \
+    s32DCTY[4] = (int32_t)s32Temp;                                                \
+    s32DCTY[12] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_5_11                                                   \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_5_0 * (int32_t)s16X[ChOffset + 5];    \
-    s32Temp2 =                                                               \
-        (int32_t)WIND_8_SUBBANDS_5_0 * (int32_t)s16X[ChOffset + 64 + 11];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_5_1 * (int32_t)s16X[ChOffset + 16 + 5];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_5_1 * (int32_t)s16X[ChOffset + 48 + 11];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_5_2 * (int32_t)s16X[ChOffset + 32 + 5];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_5_2 * (int32_t)s16X[ChOffset + 32 + 11];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_5_3 * (int32_t)s16X[ChOffset + 48 + 5];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_5_3 * (int32_t)s16X[ChOffset + 16 + 11];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_5_4 * (int32_t)s16X[ChOffset + 64 + 5];     \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_5_4 * (int32_t)s16X[ChOffset + 11]; \
-    s32DCTY[5] = (int32_t)s32Temp;                                           \
-    s32DCTY[11] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_5_11                                                        \
+  {                                                                               \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_5_0 * (int32_t)s16X[ChOffset + 5];         \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_5_0 * (int32_t)s16X[ChOffset + 64 + 11];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_5_1 * (int32_t)s16X[ChOffset + 16 + 5];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_5_1 * (int32_t)s16X[ChOffset + 48 + 11]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_5_2 * (int32_t)s16X[ChOffset + 32 + 5];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_5_2 * (int32_t)s16X[ChOffset + 32 + 11]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_5_3 * (int32_t)s16X[ChOffset + 48 + 5];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_5_3 * (int32_t)s16X[ChOffset + 16 + 11]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_5_4 * (int32_t)s16X[ChOffset + 64 + 5];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_5_4 * (int32_t)s16X[ChOffset + 11];      \
+    s32DCTY[5] = (int32_t)s32Temp;                                                \
+    s32DCTY[11] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_6_10                                                   \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_6_0 * (int32_t)s16X[ChOffset + 6];    \
-    s32Temp2 =                                                               \
-        (int32_t)WIND_8_SUBBANDS_6_0 * (int32_t)s16X[ChOffset + 64 + 10];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_6_1 * (int32_t)s16X[ChOffset + 16 + 6];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_6_1 * (int32_t)s16X[ChOffset + 48 + 10];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_6_2 * (int32_t)s16X[ChOffset + 32 + 6];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_6_2 * (int32_t)s16X[ChOffset + 32 + 10];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_6_3 * (int32_t)s16X[ChOffset + 48 + 6];     \
-    s32Temp2 +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_6_3 * (int32_t)s16X[ChOffset + 16 + 10];    \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_6_4 * (int32_t)s16X[ChOffset + 64 + 6];     \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_6_4 * (int32_t)s16X[ChOffset + 10]; \
-    s32DCTY[6] = (int32_t)s32Temp;                                           \
-    s32DCTY[10] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_6_10                                                        \
+  {                                                                               \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_6_0 * (int32_t)s16X[ChOffset + 6];         \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_6_0 * (int32_t)s16X[ChOffset + 64 + 10];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_6_1 * (int32_t)s16X[ChOffset + 16 + 6];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_6_1 * (int32_t)s16X[ChOffset + 48 + 10]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_6_2 * (int32_t)s16X[ChOffset + 32 + 6];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_6_2 * (int32_t)s16X[ChOffset + 32 + 10]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_6_3 * (int32_t)s16X[ChOffset + 48 + 6];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_6_3 * (int32_t)s16X[ChOffset + 16 + 10]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_6_4 * (int32_t)s16X[ChOffset + 64 + 6];   \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_6_4 * (int32_t)s16X[ChOffset + 10];      \
+    s32DCTY[6] = (int32_t)s32Temp;                                                \
+    s32DCTY[10] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_7_9                                                   \
-  {                                                                         \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_7_0 * (int32_t)s16X[ChOffset + 7];   \
-    s32Temp2 =                                                              \
-        (int32_t)WIND_8_SUBBANDS_7_0 * (int32_t)s16X[ChOffset + 64 + 9];    \
-    s32Temp +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_7_1 * (int32_t)s16X[ChOffset + 16 + 7];    \
-    s32Temp2 +=                                                             \
-        (int32_t)WIND_8_SUBBANDS_7_1 * (int32_t)s16X[ChOffset + 48 + 9];    \
-    s32Temp +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_7_2 * (int32_t)s16X[ChOffset + 32 + 7];    \
-    s32Temp2 +=                                                             \
-        (int32_t)WIND_8_SUBBANDS_7_2 * (int32_t)s16X[ChOffset + 32 + 9];    \
-    s32Temp +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_7_3 * (int32_t)s16X[ChOffset + 48 + 7];    \
-    s32Temp2 +=                                                             \
-        (int32_t)WIND_8_SUBBANDS_7_3 * (int32_t)s16X[ChOffset + 16 + 9];    \
-    s32Temp +=                                                              \
-        (int32_t)WIND_8_SUBBANDS_7_4 * (int32_t)s16X[ChOffset + 64 + 7];    \
-    s32Temp2 += (int32_t)WIND_8_SUBBANDS_7_4 * (int32_t)s16X[ChOffset + 9]; \
-    s32DCTY[7] = (int32_t)s32Temp;                                          \
-    s32DCTY[9] = (int32_t)s32Temp2;                                         \
+#define WINDOW_ACCU_8_7_9                                                        \
+  {                                                                              \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_7_0 * (int32_t)s16X[ChOffset + 7];        \
+    s32Temp2 = (int32_t)WIND_8_SUBBANDS_7_0 * (int32_t)s16X[ChOffset + 64 + 9];  \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_7_1 * (int32_t)s16X[ChOffset + 16 + 7];  \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_7_1 * (int32_t)s16X[ChOffset + 48 + 9]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_7_2 * (int32_t)s16X[ChOffset + 32 + 7];  \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_7_2 * (int32_t)s16X[ChOffset + 32 + 9]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_7_3 * (int32_t)s16X[ChOffset + 48 + 7];  \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_7_3 * (int32_t)s16X[ChOffset + 16 + 9]; \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_7_4 * (int32_t)s16X[ChOffset + 64 + 7];  \
+    s32Temp2 += (int32_t)WIND_8_SUBBANDS_7_4 * (int32_t)s16X[ChOffset + 9];      \
+    s32DCTY[7] = (int32_t)s32Temp;                                               \
+    s32DCTY[9] = (int32_t)s32Temp2;                                              \
   }
-#define WINDOW_ACCU_8_8                                                      \
-  {                                                                          \
-    s32Temp = (int32_t)WIND_8_SUBBANDS_8_0 *                                 \
-              (int32_t)(s16X[ChOffset + 8] + s16X[ChOffset + 64 + 8]);       \
-    s32Temp += (int32_t)WIND_8_SUBBANDS_8_1 *                                \
-               (int32_t)(s16X[ChOffset + 16 + 8] + s16X[ChOffset + 48 + 8]); \
-    s32Temp +=                                                               \
-        (int32_t)WIND_8_SUBBANDS_8_2 * (int32_t)s16X[ChOffset + 32 + 8];     \
-    s32DCTY[8] = (int32_t)s32Temp;                                           \
+#define WINDOW_ACCU_8_8                                                         \
+  {                                                                             \
+    s32Temp = (int32_t)WIND_8_SUBBANDS_8_0 *                                    \
+              (int32_t)(s16X[ChOffset + 8] + s16X[ChOffset + 64 + 8]);          \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_8_1 *                                   \
+               (int32_t)(s16X[ChOffset + 16 + 8] + s16X[ChOffset + 48 + 8]);    \
+    s32Temp += (int32_t)WIND_8_SUBBANDS_8_2 * (int32_t)s16X[ChOffset + 32 + 8]; \
+    s32DCTY[8] = (int32_t)s32Temp;                                              \
   }
-#define WINDOW_ACCU_4_0                                              \
-  {                                                                  \
-    s32Temp = (int32_t)WIND_4_SUBBANDS_0_1 *                         \
-              (int32_t)(s16X[ChOffset + 8] - s16X[ChOffset + 32]);   \
-    s32Temp += (int32_t)WIND_4_SUBBANDS_0_2 *                        \
-               (int32_t)(s16X[ChOffset + 16] - s16X[ChOffset + 24]); \
-    s32DCTY[0] = (int32_t)(s32Temp);                                 \
+#define WINDOW_ACCU_4_0                                                                           \
+  {                                                                                               \
+    s32Temp = (int32_t)WIND_4_SUBBANDS_0_1 * (int32_t)(s16X[ChOffset + 8] - s16X[ChOffset + 32]); \
+    s32Temp +=                                                                                    \
+            (int32_t)WIND_4_SUBBANDS_0_2 * (int32_t)(s16X[ChOffset + 16] - s16X[ChOffset + 24]);  \
+    s32DCTY[0] = (int32_t)(s32Temp);                                                              \
   }
-#define WINDOW_ACCU_4_1_7                                                      \
-  {                                                                            \
-    s32Temp = (int32_t)WIND_4_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 1];      \
-    s32Temp2 =                                                                 \
-        (int32_t)WIND_4_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 32 + 7];       \
-    s32Temp += (int32_t)WIND_4_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 8 + 1]; \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 24 + 7];       \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 16 + 1];       \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 16 + 7];       \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 24 + 1];       \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 8 + 7];        \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 32 + 1];       \
-    s32Temp2 += (int32_t)WIND_4_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 7];    \
-    s32DCTY[1] = (int32_t)(s32Temp);                                           \
-    s32DCTY[7] = (int32_t)(s32Temp2);                                          \
+#define WINDOW_ACCU_4_1_7                                                        \
+  {                                                                              \
+    s32Temp = (int32_t)WIND_4_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 1];        \
+    s32Temp2 = (int32_t)WIND_4_SUBBANDS_1_0 * (int32_t)s16X[ChOffset + 32 + 7];  \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 8 + 1];   \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_1_1 * (int32_t)s16X[ChOffset + 24 + 7]; \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 16 + 1];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_1_2 * (int32_t)s16X[ChOffset + 16 + 7]; \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 24 + 1];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_1_3 * (int32_t)s16X[ChOffset + 8 + 7];  \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 32 + 1];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_1_4 * (int32_t)s16X[ChOffset + 7];      \
+    s32DCTY[1] = (int32_t)(s32Temp);                                             \
+    s32DCTY[7] = (int32_t)(s32Temp2);                                            \
   }
-#define WINDOW_ACCU_4_2_6                                                      \
-  {                                                                            \
-    s32Temp = (int32_t)WIND_4_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 2];      \
-    s32Temp2 =                                                                 \
-        (int32_t)WIND_4_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 32 + 6];       \
-    s32Temp += (int32_t)WIND_4_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 8 + 2]; \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 24 + 6];       \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 16 + 2];       \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 16 + 6];       \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 24 + 2];       \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 8 + 6];        \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 32 + 2];       \
-    s32Temp2 += (int32_t)WIND_4_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 6];    \
-    s32DCTY[2] = (int32_t)(s32Temp);                                           \
-    s32DCTY[6] = (int32_t)(s32Temp2);                                          \
+#define WINDOW_ACCU_4_2_6                                                        \
+  {                                                                              \
+    s32Temp = (int32_t)WIND_4_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 2];        \
+    s32Temp2 = (int32_t)WIND_4_SUBBANDS_2_0 * (int32_t)s16X[ChOffset + 32 + 6];  \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 8 + 2];   \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_2_1 * (int32_t)s16X[ChOffset + 24 + 6]; \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 16 + 2];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_2_2 * (int32_t)s16X[ChOffset + 16 + 6]; \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 24 + 2];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_2_3 * (int32_t)s16X[ChOffset + 8 + 6];  \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 32 + 2];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_2_4 * (int32_t)s16X[ChOffset + 6];      \
+    s32DCTY[2] = (int32_t)(s32Temp);                                             \
+    s32DCTY[6] = (int32_t)(s32Temp2);                                            \
   }
-#define WINDOW_ACCU_4_3_5                                                      \
-  {                                                                            \
-    s32Temp = (int32_t)WIND_4_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 3];      \
-    s32Temp2 =                                                                 \
-        (int32_t)WIND_4_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 32 + 5];       \
-    s32Temp += (int32_t)WIND_4_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 8 + 3]; \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 24 + 5];       \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 16 + 3];       \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 16 + 5];       \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 24 + 3];       \
-    s32Temp2 +=                                                                \
-        (int32_t)WIND_4_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 8 + 5];        \
-    s32Temp +=                                                                 \
-        (int32_t)WIND_4_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 32 + 3];       \
-    s32Temp2 += (int32_t)WIND_4_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 5];    \
-    s32DCTY[3] = (int32_t)(s32Temp);                                           \
-    s32DCTY[5] = (int32_t)(s32Temp2);                                          \
+#define WINDOW_ACCU_4_3_5                                                        \
+  {                                                                              \
+    s32Temp = (int32_t)WIND_4_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 3];        \
+    s32Temp2 = (int32_t)WIND_4_SUBBANDS_3_0 * (int32_t)s16X[ChOffset + 32 + 5];  \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 8 + 3];   \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_3_1 * (int32_t)s16X[ChOffset + 24 + 5]; \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 16 + 3];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_3_2 * (int32_t)s16X[ChOffset + 16 + 5]; \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 24 + 3];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_3_3 * (int32_t)s16X[ChOffset + 8 + 5];  \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 32 + 3];  \
+    s32Temp2 += (int32_t)WIND_4_SUBBANDS_3_4 * (int32_t)s16X[ChOffset + 5];      \
+    s32DCTY[3] = (int32_t)(s32Temp);                                             \
+    s32DCTY[5] = (int32_t)(s32Temp2);                                            \
   }
 
-#define WINDOW_ACCU_4_4                                                     \
-  {                                                                         \
-    s32Temp = (int32_t)WIND_4_SUBBANDS_4_0 *                                \
-              (int32_t)(s16X[ChOffset + 4] + s16X[ChOffset + 4 + 32]);      \
-    s32Temp += (int32_t)WIND_4_SUBBANDS_4_1 *                               \
-               (int32_t)(s16X[ChOffset + 4 + 8] + s16X[ChOffset + 4 + 24]); \
-    s32Temp +=                                                              \
-        (int32_t)WIND_4_SUBBANDS_4_2 * (int32_t)s16X[ChOffset + 4 + 16];    \
-    s32DCTY[4] = (int32_t)(s32Temp);                                        \
+#define WINDOW_ACCU_4_4                                                         \
+  {                                                                             \
+    s32Temp = (int32_t)WIND_4_SUBBANDS_4_0 *                                    \
+              (int32_t)(s16X[ChOffset + 4] + s16X[ChOffset + 4 + 32]);          \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_4_1 *                                   \
+               (int32_t)(s16X[ChOffset + 4 + 8] + s16X[ChOffset + 4 + 24]);     \
+    s32Temp += (int32_t)WIND_4_SUBBANDS_4_2 * (int32_t)s16X[ChOffset + 4 + 16]; \
+    s32DCTY[4] = (int32_t)(s32Temp);                                            \
   }
 #endif
 #define WINDOW_PARTIAL_4 \
@@ -1059,47 +861,38 @@ static int16_t* s16X =
   }
 #else
 #if (SBC_IS_64_MULT_IN_WINDOW_ACCU == TRUE)
-#define WINDOW_ACCU_4(i)                                                     \
-  {                                                                          \
-    s64Temp = ((int64_t)gas32CoeffFor4SBs[i] * (int64_t)s16X[ChOffset + i]); \
-    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 8)] *                        \
-                (int64_t)s16X[ChOffset + i + 8]);                            \
-    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 16)] *                       \
-                (int64_t)s16X[ChOffset + i + 16]);                           \
-    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 24)] *                       \
-                (int64_t)s16X[ChOffset + i + 24]);                           \
-    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 32)] *                       \
-                (int64_t)s16X[ChOffset + i + 32]);                           \
-    s32DCTY[i] = (int32_t)(s64Temp >> 16);                                   \
-    /*printf("s32DCTY4: 0x%x \n", s32DCTY[i]);*/                             \
+#define WINDOW_ACCU_4(i)                                                                  \
+  {                                                                                       \
+    s64Temp = ((int64_t)gas32CoeffFor4SBs[i] * (int64_t)s16X[ChOffset + i]);              \
+    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 8)] * (int64_t)s16X[ChOffset + i + 8]);   \
+    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 16)] * (int64_t)s16X[ChOffset + i + 16]); \
+    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 24)] * (int64_t)s16X[ChOffset + i + 24]); \
+    s64Temp += ((int64_t)gas32CoeffFor4SBs[(i + 32)] * (int64_t)s16X[ChOffset + i + 32]); \
+    s32DCTY[i] = (int32_t)(s64Temp >> 16);                                                \
+    /*printf("s32DCTY4: 0x%x \n", s32DCTY[i]);*/                                          \
   }
 #else
-#define WINDOW_ACCU_4(i)                                                 \
-  {                                                                      \
-    s32DCTY[i] = (gas32CoeffFor4SBs[i * 2] * s16X[ChOffset + i]) +       \
-                 (((int32_t)(uint16_t)(gas32CoeffFor4SBs[(i * 2) + 1]) * \
-                   s16X[ChOffset + i]) >>                                \
-                  16);                                                   \
-    s32DCTY[i] +=                                                        \
-        (gas32CoeffFor4SBs[(i + 8) * 2] * s16X[ChOffset + i + 8]) +      \
-        (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 8) * 2) + 1]) *    \
-          s16X[ChOffset + i + 8]) >>                                     \
-         16);                                                            \
-    s32DCTY[i] +=                                                        \
-        (gas32CoeffFor4SBs[(i + 16) * 2] * s16X[ChOffset + i + 16]) +    \
-        (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 16) * 2) + 1]) *   \
-          s16X[ChOffset + i + 16]) >>                                    \
-         16);                                                            \
-    s32DCTY[i] +=                                                        \
-        (gas32CoeffFor4SBs[(i + 24) * 2] * s16X[ChOffset + i + 24]) +    \
-        (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 24) * 2) + 1]) *   \
-          s16X[ChOffset + i + 24]) >>                                    \
-         16);                                                            \
-    s32DCTY[i] +=                                                        \
-        (gas32CoeffFor4SBs[(i + 32) * 2] * s16X[ChOffset + i + 32]) +    \
-        (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 32) * 2) + 1]) *   \
-          s16X[ChOffset + i + 32]) >>                                    \
-         16);                                                            \
+#define WINDOW_ACCU_4(i)                                                                        \
+  {                                                                                             \
+    s32DCTY[i] =                                                                                \
+            (gas32CoeffFor4SBs[i * 2] * s16X[ChOffset + i]) +                                   \
+            (((int32_t)(uint16_t)(gas32CoeffFor4SBs[(i * 2) + 1]) * s16X[ChOffset + i]) >> 16); \
+    s32DCTY[i] += (gas32CoeffFor4SBs[(i + 8) * 2] * s16X[ChOffset + i + 8]) +                   \
+                  (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 8) * 2) + 1]) *                 \
+                    s16X[ChOffset + i + 8]) >>                                                  \
+                   16);                                                                         \
+    s32DCTY[i] += (gas32CoeffFor4SBs[(i + 16) * 2] * s16X[ChOffset + i + 16]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 16) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 16]) >>                                                 \
+                   16);                                                                         \
+    s32DCTY[i] += (gas32CoeffFor4SBs[(i + 24) * 2] * s16X[ChOffset + i + 24]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 24) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 24]) >>                                                 \
+                   16);                                                                         \
+    s32DCTY[i] += (gas32CoeffFor4SBs[(i + 32) * 2] * s16X[ChOffset + i + 32]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor4SBs[((i + 32) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 32]) >>                                                 \
+                   16);                                                                         \
   }
 #endif
 #define WINDOW_PARTIAL_4 \
@@ -1115,52 +908,42 @@ static int16_t* s16X =
   }
 
 #if (SBC_IS_64_MULT_IN_WINDOW_ACCU == TRUE)
-#define WINDOW_ACCU_8(i)                                                    \
-  {                                                                         \
-    s64Temp =                                                               \
-        ((((int64_t)gas32CoeffFor8SBs[i] * (int64_t)s16X[ChOffset + i])));  \
-    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 16)] *                    \
-                  (int64_t)s16X[ChOffset + i + 16])));                      \
-    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 32)] *                    \
-                  (int64_t)s16X[ChOffset + i + 32])));                      \
-    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 48)] *                    \
-                  (int64_t)s16X[ChOffset + i + 48])));                      \
-    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 64)] *                    \
-                  (int64_t)s16X[ChOffset + i + 64])));                      \
-    /*printf("s32DCTY8: %d= 0x%x * %d\n", s32DCTY[i], gas32CoeffFor8SBs[i], \
-     * s16X[ChOffset+i]);*/                                                 \
-    s32DCTY[i] = (int32_t)(s64Temp >> 16);                                  \
+#define WINDOW_ACCU_8(i)                                                                      \
+  {                                                                                           \
+    s64Temp = ((((int64_t)gas32CoeffFor8SBs[i] * (int64_t)s16X[ChOffset + i])));              \
+    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 16)] * (int64_t)s16X[ChOffset + i + 16]))); \
+    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 32)] * (int64_t)s16X[ChOffset + i + 32]))); \
+    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 48)] * (int64_t)s16X[ChOffset + i + 48]))); \
+    s64Temp += ((((int64_t)gas32CoeffFor8SBs[(i + 64)] * (int64_t)s16X[ChOffset + i + 64]))); \
+    /*printf("s32DCTY8: %d= 0x%x * %d\n", s32DCTY[i], gas32CoeffFor8SBs[i],                   \
+     * s16X[ChOffset+i]);*/                                                                   \
+    s32DCTY[i] = (int32_t)(s64Temp >> 16);                                                    \
   }
 #else
-#define WINDOW_ACCU_8(i)                                                       \
-  {                                                                            \
-    s32DCTY[i] = (gas32CoeffFor8SBs[i * 2] * s16X[ChOffset + i]) +             \
-                 (((int32_t)(uint16_t)(gas32CoeffFor8SBs[(i * 2) + 1]) *       \
-                   s16X[ChOffset + i]) >>                                      \
-                  16);                                                         \
-    s32DCTY[i] +=                                                              \
-        (gas32CoeffFor8SBs[(i + 16) * 2] * s16X[ChOffset + i + 16]) +          \
-        (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 16) * 2) + 1]) *         \
-          s16X[ChOffset + i + 16]) >>                                          \
-         16);                                                                  \
-    s32DCTY[i] +=                                                              \
-        (gas32CoeffFor8SBs[(i + 32) * 2] * s16X[ChOffset + i + 32]) +          \
-        (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 32) * 2) + 1]) *         \
-          s16X[ChOffset + i + 32]) >>                                          \
-         16);                                                                  \
-    s32DCTY[i] +=                                                              \
-        (gas32CoeffFor8SBs[(i + 48) * 2] * s16X[ChOffset + i + 48]) +          \
-        (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 48) * 2) + 1]) *         \
-          s16X[ChOffset + i + 48]) >>                                          \
-         16);                                                                  \
-    s32DCTY[i] +=                                                              \
-        (gas32CoeffFor8SBs[(i + 64) * 2] * s16X[ChOffset + i + 64]) +          \
-        (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 64) * 2) + 1]) *         \
-          s16X[ChOffset + i + 64]) >>                                          \
-         16);                                                                  \
-    /*printf("s32DCTY8: %d = 0x%4x%4x * %d\n", s32DCTY[i], gas32CoeffFor8SBs[i \
-     * * 2], (gas32CoeffFor8SBs[(i * 2) + 1]), s16X[ChOffset+i]);*/            \
-    /*s32DCTY[i]=(int32_t)(s64Temp>>16);*/                                     \
+#define WINDOW_ACCU_8(i)                                                                        \
+  {                                                                                             \
+    s32DCTY[i] =                                                                                \
+            (gas32CoeffFor8SBs[i * 2] * s16X[ChOffset + i]) +                                   \
+            (((int32_t)(uint16_t)(gas32CoeffFor8SBs[(i * 2) + 1]) * s16X[ChOffset + i]) >> 16); \
+    s32DCTY[i] += (gas32CoeffFor8SBs[(i + 16) * 2] * s16X[ChOffset + i + 16]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 16) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 16]) >>                                                 \
+                   16);                                                                         \
+    s32DCTY[i] += (gas32CoeffFor8SBs[(i + 32) * 2] * s16X[ChOffset + i + 32]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 32) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 32]) >>                                                 \
+                   16);                                                                         \
+    s32DCTY[i] += (gas32CoeffFor8SBs[(i + 48) * 2] * s16X[ChOffset + i + 48]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 48) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 48]) >>                                                 \
+                   16);                                                                         \
+    s32DCTY[i] += (gas32CoeffFor8SBs[(i + 64) * 2] * s16X[ChOffset + i + 64]) +                 \
+                  (((int32_t)(uint16_t)(gas32CoeffFor8SBs[((i + 64) * 2) + 1]) *                \
+                    s16X[ChOffset + i + 64]) >>                                                 \
+                   16);                                                                         \
+    /*printf("s32DCTY8: %d = 0x%4x%4x * %d\n", s32DCTY[i], gas32CoeffFor8SBs[i                  \
+     * * 2], (gas32CoeffFor8SBs[(i * 2) + 1]), s16X[ChOffset+i]);*/                             \
+    /*s32DCTY[i]=(int32_t)(s64Temp>>16);*/                                                      \
   }
 #endif
 #define WINDOW_PARTIAL_8 \
@@ -1188,10 +971,10 @@ static int16_t* s16X =
 static int16_t ShiftCounter = 0;
 extern int16_t EncMaxShiftCounter;
 /****************************************************************************
-* SbcAnalysisFilter - performs Analysis of the input audio stream
-*
-* RETURNS : N/A
-*/
+ * SbcAnalysisFilter - performs Analysis of the input audio stream
+ *
+ * RETURNS : N/A
+ */
 void SbcAnalysisFilter4(SBC_ENC_PARAMS* pstrEncParams, int16_t* input) {
   int16_t* ps16PcmBuf;
   int32_t* ps32SbBuf;

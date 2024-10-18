@@ -118,12 +118,12 @@ typedef enum {
   OI_MODULE_SDPDB,         /**< 54 Service Discovery Protocol database */
   OI_MODULE_SECMGR,        /**< 55 Security Manager */
   OI_MODULE_SNIFFLOG,      /**< 56 sniff log */
-  OI_MODULE_SUPPORT, /**< 57 support functions, including CThru Dispatcher, time
-                        functions, and stack initialization */
-  OI_MODULE_TRANSPORT, /**< 58 transport layer between HCI command layer and
-                          driver */
-  OI_MODULE_TEST, /**< 59 used to debug output from internal test programs */
-  OI_MODULE_XML,  /**< 60 XML/CSS parser */
+  OI_MODULE_SUPPORT,       /**< 57 support functions, including CThru Dispatcher, time
+                              functions, and stack initialization */
+  OI_MODULE_TRANSPORT,     /**< 58 transport layer between HCI command layer and
+                              driver */
+  OI_MODULE_TEST,          /**< 59 used to debug output from internal test programs */
+  OI_MODULE_XML,           /**< 60 XML/CSS parser */
 
   OI_MODULE_DI, /**< 61 Device Identification Profile */
 
@@ -134,10 +134,10 @@ typedef enum {
   OI_MODULE_BHSRV,           /**< 64 BLUEmagic Host API server side */
   OI_MODULE_MSGQ,            /**< 65 module that handles message queuing */
   OI_MODULE_BHAPI_TRANSPORT, /**< 66 module that handles message queuing */
-  OI_MODULE_BLST_SRV, /**< 67 module that provides server side BHAPI Lightweight
-                         Serial Transport */
-  OI_MODULE_BLST_CLI, /**< 68 module that provides client side BHAPI Lightweight
-                         Serial Transport */
+  OI_MODULE_BLST_SRV,        /**< 67 module that provides server side BHAPI Lightweight
+                                Serial Transport */
+  OI_MODULE_BLST_CLI,        /**< 68 module that provides client side BHAPI Lightweight
+                                Serial Transport */
 
   // OEM files --> Updates to oi_debug.c
   OI_MODULE_OEM, /**< 69 Application Memory allocation */

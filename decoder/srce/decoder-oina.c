@@ -35,10 +35,9 @@ This file exposes OINA-specific interfaces to decoder functions.
 
 #include <oi_codec_sbc_private.h>
 
-OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(
-    OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BOOL enhanced, uint8_t frequency,
-    uint8_t mode, uint8_t subbands, uint8_t blocks, uint8_t alloc,
-    uint8_t maxBitpool) {
+OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BOOL enhanced,
+                                           uint8_t frequency, uint8_t mode, uint8_t subbands,
+                                           uint8_t blocks, uint8_t alloc, uint8_t maxBitpool) {
   if (frequency > SBC_FREQ_48000) {
     return OI_STATUS_INVALID_PARAMETERS;
   }
@@ -61,7 +60,7 @@ OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(
     return OI_STATUS_INVALID_PARAMETERS;
   }
 
-  if (blocks > SBC_BLOCKS_16) {
+  if (blocks > SBC_BLOCKS_15) {
     return OI_STATUS_INVALID_PARAMETERS;
   }
 
@@ -90,16 +89,14 @@ OI_STATUS OI_CODEC_SBC_DecoderConfigureRaw(
   return OI_OK;
 }
 
-OI_STATUS OI_CODEC_SBC_DecodeRaw(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                 uint8_t bitpool, const OI_BYTE** frameData,
-                                 uint32_t* frameBytes, int16_t* pcmData,
+OI_STATUS OI_CODEC_SBC_DecodeRaw(OI_CODEC_SBC_DECODER_CONTEXT* context, uint8_t bitpool,
+                                 const OI_BYTE** frameData, uint32_t* frameBytes, int16_t* pcmData,
                                  uint32_t* pcmBytes) {
-  return internal_DecodeRaw(context, bitpool, frameData, frameBytes, pcmData,
-                            pcmBytes);
+  return internal_DecodeRaw(context, bitpool, frameData, frameBytes, pcmData, pcmBytes);
 }
 
-OI_STATUS OI_CODEC_SBC_DecoderLimit(OI_CODEC_SBC_DECODER_CONTEXT* context,
-                                    OI_BOOL enhanced, uint8_t subbands) {
+OI_STATUS OI_CODEC_SBC_DecoderLimit(OI_CODEC_SBC_DECODER_CONTEXT* context, OI_BOOL enhanced,
+                                    uint8_t subbands) {
   if (enhanced) {
 #ifdef SBC_ENHANCED
     context->enhancedEnabled = TRUE;

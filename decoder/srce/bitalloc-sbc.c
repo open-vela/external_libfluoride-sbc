@@ -57,24 +57,21 @@ static void stereoBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common) {
   OI_UINT bitpoolPreference = 0;
 
   bitcount = computeBitneed(common, &bitneeds.uint8[0], 0, &bitpoolPreference);
-  bitcount += computeBitneed(common, &bitneeds.uint8[nrof_subbands], 1,
-                             &bitpoolPreference);
+  bitcount += computeBitneed(common, &bitneeds.uint8[nrof_subbands], 1, &bitpoolPreference);
 
   {
     OI_UINT ex;
-    bitadjust = adjustToFitBitpool(common->frameInfo.bitpool, bitneeds.uint32,
-                                   2 * nrof_subbands, bitcount, &ex);
+    bitadjust = adjustToFitBitpool(common->frameInfo.bitpool, bitneeds.uint32, 2 * nrof_subbands,
+                                   bitcount, &ex);
     /* We want the compiler to put excess into a register */
     excess = ex;
   }
   sbL = 0;
   sbR = nrof_subbands;
   while (sbL < nrof_subbands) {
-    excess = allocAdjustedBits(&common->bits.uint8[sbL],
-                               bitneeds.uint8[sbL] + bitadjust, excess);
+    excess = allocAdjustedBits(&common->bits.uint8[sbL], bitneeds.uint8[sbL] + bitadjust, excess);
     ++sbL;
-    excess = allocAdjustedBits(&common->bits.uint8[sbR],
-                               bitneeds.uint8[sbR] + bitadjust, excess);
+    excess = allocAdjustedBits(&common->bits.uint8[sbR], bitneeds.uint8[sbR] + bitadjust, excess);
     ++sbR;
   }
   sbL = 0;
@@ -91,10 +88,10 @@ static void stereoBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common) {
 }
 
 static const BIT_ALLOC balloc[] = {
-    monoBitAllocation,   /* SBC_MONO */
-    dualBitAllocation,   /* SBC_DUAL_CHANNEL */
-    stereoBitAllocation, /* SBC_STEREO */
-    stereoBitAllocation  /* SBC_JOINT_STEREO */
+        monoBitAllocation,   /* SBC_MONO */
+        dualBitAllocation,   /* SBC_DUAL_CHANNEL */
+        stereoBitAllocation, /* SBC_STEREO */
+        stereoBitAllocation  /* SBC_JOINT_STEREO */
 };
 
 PRIVATE void OI_SBC_ComputeBitAllocation(OI_CODEC_SBC_COMMON_CONTEXT* common) {
@@ -126,8 +123,7 @@ uint8_t OI_CODEC_SBC_GetMaxBitneed(OI_CODEC_SBC_COMMON_CONTEXT* common) {
 /*
  * Calculates the bitpool size for a given frame length
  */
-uint16_t OI_CODEC_SBC_CalculateBitpool(OI_CODEC_SBC_FRAME_INFO* frame,
-                                       uint16_t frameLen) {
+uint16_t OI_CODEC_SBC_CalculateBitpool(OI_CODEC_SBC_FRAME_INFO* frame, uint16_t frameLen) {
   uint16_t nrof_subbands = frame->nrof_subbands;
   uint16_t nrof_blocks = frame->nrof_blocks;
   uint16_t hdr;
