@@ -140,7 +140,7 @@ PRIVATE void OI_SBC_ReadScalefactors(OI_CODEC_SBC_COMMON_CONTEXT* common, const 
     do {
       *scale_factor++ = HIGH(f = *b++);
       *scale_factor++ = LOW(f);
-    } while (--i);
+    } while (--i && scale_factor < common->scale_factor + SBC_MAX_CHANNELS * SBC_MAX_BANDS);
     /*
      * In this case we know that the scale factors end on a byte boundary so all
      * we need to do
